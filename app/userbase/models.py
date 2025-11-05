@@ -52,7 +52,7 @@ class Job(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    scheduled_time = models.DateTimeField()
+    scheduled_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=[
