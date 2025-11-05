@@ -41,3 +41,8 @@ class Doggy(models.Model):
     age = models.PositiveInt()
     # TODO Fill in second field
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+
+
+class WalkJob(models.Model):
+    scheduled_time = models.DateTimeField()
+    scheduled_dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
