@@ -1,6 +1,6 @@
 from django.db import models
 
-# please note that django provides a user paradim already. (im not looking up how to spell that.)
+# please note that django provides a user paradigm already. (im not looking up how to spell that.)
 
 
 class Walker(models.Model):
