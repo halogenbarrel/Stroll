@@ -1,0 +1,29 @@
+<div class="job-detail">
+    <h1>{{ job.title }}</h1>
+
+    <div class="job-info">
+        <p class="description">{{ job.description }}</p>
+
+        <div class="details">
+            <p><strong>Status:</strong> {{ job.status }}</p>
+            <p><strong>Scheduled Time:</strong> {{ job.scheduled_time }}</p>
+            <p><strong>Created:</strong> {{ job.created_at }}</p>
+        </div>
+
+        <div class="dog-info">
+            <h2>Dog Information</h2>
+            <p><strong>Name:</strong> {{ job.dog.dog_name }}</p>
+            <p><strong>Age:</strong> {{ job.dog.age }}</p>
+            <p><strong>Weight:</strong> {{ job.weight }}</p>
+        </div>
+
+        <div class="walker-info">
+            <h2>Walker Information</h2>
+            {% if job.walker %}
+            <p><strong>Walker:</strong> {{ job.walker }}</p>
+            {% else %}
+            <p><strong>Walker:</strong> Not assigned yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>

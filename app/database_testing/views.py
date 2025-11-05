@@ -5,5 +5,3 @@ def testValues(request):
     dog_list = Doggy.objects.all()
     context = {"dog_list": dog_list}
     return render(request, "test_values.html", context)
-
-# Create your views here.

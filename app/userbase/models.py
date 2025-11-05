@@ -37,12 +37,32 @@ class Doggy(models.Model):
     """
 
     dog_name = models.CharField(max_length=50)
-    weight = models.PositiveFloat()
-    age = models.PositiveInt()
+    weight = models.FloatField(default=0.0)
+    age = models.FloatField(default=0.0)
     # TODO Fill in second field
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True, blank=True)
+
+class Job(models.Model):
+    """
+    Represents a dog walking job listing
+    """
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    walker = models.ForeignKey(Walker, on_delete=models.SET_NULL, null=True, blank=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-
-
-class WalkJob(models.Model):
+    dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
     scheduled_time = models.DateTimeField()
-    scheduled_dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('OPEN', 'Open'),
+            ('ASSIGNED', 'Assigned'),
+            ('COMPLETED', 'Completed'),
+            ('CANCELLED', 'Cancelled')
+        ],
+        default='OPEN'
+    )
+
+    def __str__(self):
+        return f"{self.title} - {self.scheduled_time}"

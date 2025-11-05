@@ -24,4 +24,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.dog_list, name="dog_list"),
     path("testing_db/", include("database_testing.urls")),
+    path("jobs/", include("view_job.urls")),
 ]
