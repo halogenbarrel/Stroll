@@ -26,9 +26,8 @@ def register(request):
                     address=form.cleaned_data['address'],
                     phone_number=form.cleaned_data['phone_number']
                 )
-            
             login(request, user)
-            return redirect('home')  # Replace with your home page URL name
+            return redirect('/')
     else:
         form = StrollUserCreationForm()
     

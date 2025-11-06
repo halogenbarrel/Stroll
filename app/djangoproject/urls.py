@@ -18,11 +18,14 @@ Including another URLconf
 from django.urls import include, path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from dashboard import views as dashboard_views
+from userbase import views as userbase_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("dashboard.urls")),
-    path("dogs/", include("userbase.urls")),
+    path("", dashboard_views.dashboard, name='dashboard'),
+    path("dogs/", userbase_views.dog_list, name='dog_list'),
+    path("register", userbase_views.register, name='register'),
     path("testing_db/", include("database_testing.urls")),
     path("jobs/", include("view_job.urls")),
     
