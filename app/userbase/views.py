@@ -1,7 +1,38 @@
-from django.shortcuts import render
-from userbase.models import Doggy
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from userbase.models import Doggy, Walker, Owner
 from django.db.models import Count
+from .forms import StrollUserCreationForm
 
+
+def register(request):
+    if request.method == 'POST':
+        form = StrollUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            
+            # Create Walker profile if selected
+            if form.cleaned_data['is_walker']:
+                Walker.objects.create(
+                    user=user,
+                    bio=form.cleaned_data['bio']
+                )
+            
+            # Create Owner profile if selected
+            if form.cleaned_data['is_owner']:
+                Owner.objects.create(
+                    user=user,
+                    address=form.cleaned_data['address'],
+                    phone_number=form.cleaned_data['phone_number']
+                )
+            
+            login(request, user)
+            return redirect('home')  # Replace with your home page URL name
+    else:
+        form = StrollUserCreationForm()
+    
+    return render(request, 'userbase/register.html', {'form': form})
 
 def dog_list(request):
     # Pull from database

@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testing Values for database</title>
-</head>
+{% block title %}Database Testing{% endblock %}
 
-<body>
+{% block content %}
+<div class="database-testing">
+    <h2>Database Testing Values</h2>
     <h1>This is a test page for database values.</h1>
     <ul>
         {% for dog in dog_list %}
         <li>{{ dog.dog_name }} - {{ dog.id }}</li>
         {% endfor %}
-</body>
+        </body>
 
-</html>
+        </html>

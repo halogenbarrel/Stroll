@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-{% csrf_token %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog List</title>
+{% block title %}Dog List{% endblock %}
+
+{% block content %}
+<div class="dog-list">
+    <h2>Dog List</h2>
     <style>
         table {
             width: 50%;
@@ -24,15 +23,15 @@
             background-color: #f2f2f2;
         }
     </style>
-</head>
+    </head>
 
-<body>
-    <h1>Dog List</h1>
+    <body>
+        <h1>Dog List</h1>
 
-     
-   </form> 
-    
-w 
-</body>
 
-</html>
+        </form>
+
+        w
+    </body>
+
+    </html>

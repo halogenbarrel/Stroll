@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # please note that django provides a user paradigm already. (im not looking up how to spell that.)
 
@@ -7,11 +8,20 @@ class Walker(models.Model):
     """
     Extension of the User model that already exists within django
     This should carry the permissions that an walker would have on top,
-    as well as any additional needed info, such as location
+    as well as any additional needed info, such as location.
+    A user can be both a walker and an owner.
     """
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='walker_profile')
+    bio = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return f"Walker: {self.user.username}"
+
     class Meta:
-        permissions = [("", "")]
+        permissions = [
+            ("can_accept_jobs", "Can accept walking jobs"),
+            ("can_complete_jobs", "Can mark jobs as completed")
+        ]
 
 
 class Owner(models.Model):
@@ -19,10 +29,21 @@ class Owner(models.Model):
     Extension of the User model that already exists within django
     This should carry the permissions that an owner would have on top,
     as well as any additional needed info.
+    A user can be both an owner and a walker.
     """
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_profile')
+    address = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self):
+        return f"Owner: {self.user.username}"
+
     class Meta:
-        permissions = [("", "")]
+        permissions = [
+            ("can_create_jobs", "Can create walking jobs"),
+            ("can_manage_dogs", "Can manage dogs")
+        ]
 
 
 class Doggy(models.Model):

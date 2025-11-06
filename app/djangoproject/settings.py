@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "database_testing",
     "django_extensions",
     "view_job",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = "djangoproject.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -137,3 +138,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Auth Settings
+LOGIN_REDIRECT_URL = '/'  # Redirect to homepage after login
+LOGIN_URL = 'login'  # The URL to redirect to when login is required
