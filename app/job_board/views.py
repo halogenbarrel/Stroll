@@ -8,3 +8,19 @@ def job_detail(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     context = {"job": job}
     return render(request, 'job_board/job_detail.html', context)
+
+
+def job_list(request):
+    """
+    Display all jobs from database
+    TODO: only display jobs per owner/walker privilages
+    """
+    jobs = Job.objects.filter(is_active=True)
+    return render(request, 'job_board/job_list.html', {'jobs': jobs})
+
+
+
+def job_create(request):
+    """
+    Create a new job posting
+    """

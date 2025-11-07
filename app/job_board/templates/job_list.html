@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h2>Available Dog Walking Jobs</h2>
+
+  {% if jobs %}
+    <ul class="list-group">
+      {% for job in jobs %}
+        <li class="list-group-item">
+          <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
+          <br>
+          {% if job.location %}
+            Location: {{ job.location }}
+          {% endif %}
+          <br>
+          {% if job.description  %}
+            <em>Description :</em> {{ job.description  }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <p>No current jobs available. Check back soon!</p>
+  {% endif %}
+{% endblock %}
