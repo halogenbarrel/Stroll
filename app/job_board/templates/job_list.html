@@ -4,6 +4,9 @@
 
   <h2>Available Dog Walking Jobs</h2>
 
+  <!--button to link to create a job posting-->
+  <a href="{% url 'create_job' %}" class="btn btn-primary">+ Create Job</a>
+
   {% if jobs %}
     <ul class="list-group">
       {% for job in jobs %}
@@ -17,11 +20,13 @@
           {% if job.description  %}
             <em>Description :</em> {{ job.description  }}
           {% endif %}
+          <br>
+          Status: {{ job.status }}
         </li>
       {% endfor %}
     </ul>
 
   {% else %}
-    <p>No current jobs available. Check back soon!</p>
+    <p>No open or assigned jobs at the moment. Check back soon!</p>
   {% endif %}
 {% endblock %}
