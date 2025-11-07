@@ -92,7 +92,7 @@
                 <div class="card-body">
                     <h2 class="card-title">Jobs</h2>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'job_board:job_list' job_id=1 %}" class="btn btn-primary">View Jobs</a>
+                    <a href="{% url 'job_board:job_list' %}" class="btn btn-primary">View Jobs</a>
                     {% else %}
                     <a href="{% url 'login' %}" class="btn btn-secondary">Login to View Jobs</a>
                     {% endif %}

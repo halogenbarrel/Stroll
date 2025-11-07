@@ -19,8 +19,9 @@ def job_list(request):
     return render(request, 'job_board/job_list.html', {'jobs': jobs})
 
 
-
+'''
 def job_create(request):
     """
     Create a new job posting
     """
+'''
