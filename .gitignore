@@ -6,3 +6,4 @@ README.org
 env_stroll
 *.sqlite3
 *.pyc
+__pycache__/

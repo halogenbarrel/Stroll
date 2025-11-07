@@ -67,13 +67,41 @@ class Job(models.Model):
     """
     Represents a dog walking job listing
     """
+    #Core identifiers
     title = models.CharField(max_length=100)
     description = models.TextField()
-    walker = models.ForeignKey(Walker, on_delete=models.SET_NULL, null=True, blank=True)
+
+    #Relationships
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    scheduled_time = models.DateTimeField(null=True, blank=True)
+    walker = models.ForeignKey(Walker, on_delete=models.SET_NULL, null=True, blank=True)
+
+    #Scheduling
+    scheduled_date = models.DateField(null=True, blank=True)
+    scheduled_time = models.TimeField(null=True, blank=True)
+    duration = models.CharField(
+            max_length=3,
+            choices=[
+                ('15', '15 minutes'),
+                ('30', '30 minutes'),
+                ('45', '45 minutes'),
+                ('60', '1 hour')
+            ],
+            default='30'
+    )
+
+    #other important info
+    location = models.CharField(max_length=200, blank=True)
+    recurrence = models.CharField(
+        max_length=10,
+        choices=[
+            ('NONE', 'No recurrence'),
+            ('DAILY', 'Daily'),
+            ('WEEKLY', 'Weekly'),
+            ('MONTHLY', 'Monthly'),
+        ],
+        default='NONE'   
+    )
     status = models.CharField(
         max_length=20,
         choices=[
@@ -84,6 +112,10 @@ class Job(models.Model):
         ],
         default='OPEN'
     )
+
+    #metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"{self.title} - {self.scheduled_time}"
