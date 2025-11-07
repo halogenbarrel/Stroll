@@ -5,3 +5,4 @@ staticfiles
 README.org
 env_stroll
 *.sqlite3
+*.pyc
