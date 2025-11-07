@@ -27,7 +27,7 @@ urlpatterns = [
     path("dogs/", userbase_views.dog_list, name='dog_list'),
     path("register", userbase_views.register, name='register'),
     path("testing_db/", include("database_testing.urls")),
-    path("jobs/", include("view_job.urls")),
+    path("jobs/", include("job_board.urls")),
     
     # Authentication URLs
     path("login/", auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
