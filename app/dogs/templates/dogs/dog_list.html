@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .dog-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .dog-card {
+    width: 200px;
+    height: 250px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  .dog-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+</style>
+
+<h2>All Dogs</h2>
+<div class="dog-grid">
+  {% for dog in dogs %}
+    <div class="dog-card">
+      <a href="{% url 'dog_detail' dog.id %}">
+        <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
+        <h3>{{ dog.dog_name }}</h3>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

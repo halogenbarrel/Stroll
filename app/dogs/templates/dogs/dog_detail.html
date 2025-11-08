@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ dog.dog_name }}</h2>
+<img src="{% if dog.photo %}{{ dog.photo.url }}{% else %}/media/dog_photos/default_paw.png{% endif %}" 
+    alt="{{ dog.dog_name }}"
+    style="max-width: 300px; height: auto; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+
+<ul>
+  <li>Weight: {{ dog.weight }} lbs</li>
+  <li>Age: {{ dog.age }}</li>
+  <li>Temperament:</li>
+  <ul>
+    {% for temperament in dog.temperaments.all %}
+    <li>{{ temperament.name }}</li>
+    {% empty %}
+    <li>No temperaments listed.</li>
+    {% endfor %}
+  </ul>
+</ul>
+{% endblock %}

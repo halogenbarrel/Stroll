@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- TODO: 
+    add change password
+    delete account 
+    update bio buttons
+    maybe owner to walker toggle?
+-->
+
+<style>
+  .settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+
+  .settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .settings-button {
+    padding: 12px 24px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    text-align: center;
+    width: 250px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .settings-button:hover {
+    background-color: #e0e0e0;
+  }
+
+  .logout {
+    color: red;
+    border-color: red;
+  }
+</style>
+
+<div class="settings-container">
+  <h2>Settings</h2>
+  <div class="settings-options">
+    <a href="{% url 'userbase:edit_owner_profile' %}" class="settings-button">Edit My Info</a>
+    <a href="{% url 'owner_dashboard' %}" class="settings-button">Edit Dog Profiles</a>
+    <a href="{% url 'logout' %}" class="settings-button logout">Logout</a>
+  </div>
+</div>
+{% endblock %}

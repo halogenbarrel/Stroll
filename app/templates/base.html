@@ -26,11 +26,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dog_list' %}">Dogs</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'job_board:job_list' %}">Jobs</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="nav-link">Welcome, {{ user.username }}!</span>
+                        <!-- incase this doesnt work. old code: <span class="nav-link">Welcome, {{ user.username }}!</span>-->
+                        <a href="{% url 'userbase:owner_settings' %}" class="nav-link btn btn-link">Welcome, {{ user.username }}!</a>
+
                     </li>
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}" class="d-inline">

@@ -20,16 +20,22 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from dashboard import views as dashboard_views
 from userbase import views as userbase_views
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", dashboard_views.dashboard, name='dashboard'),
-    path("dogs/", userbase_views.dog_list, name='dog_list'),
+    path("dogs/", include('dogs.urls')),
     path("register", userbase_views.register, name='register'),
     path("testing_db/", include("database_testing.urls")),
     path("jobs/", include("job_board.urls")),
+    path('user/', include('userbase.urls')),
     
     # Authentication URLs
     path("login/", auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path("logout/", auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-]
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #this is for profile pictures for dog accounts
+

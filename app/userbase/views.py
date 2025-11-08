@@ -33,6 +33,22 @@ def register(request):
     
     return render(request, 'userbase/register.html', {'form': form})
 
+
+@login_required
+def owner_settings(request):
+    '''
+    adding settings page if you click on the welcome <username>! in nav bar
+    '''
+    return render(request, 'userbase/owner_settings.html')
+
+@login_required
+def edit_owner_profile(request):
+    return render(request, 'userbase/edit_owner_profile.html')
+
+
+'''
+MOVING TO DOGS app
+
 def dog_list(request):
     # Pull from database
     name_lookup = request.GET.get("name", None)
@@ -58,3 +74,5 @@ def dog_list(request):
             "total_posts": total_posts,
         },
     )
+
+'''

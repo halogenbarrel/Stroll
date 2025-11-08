@@ -4,3 +4,4 @@ from .models import *
 # Register your models here.
 admin.site.register(Walker)
 admin.site.register(Doggy)
+admin.site.register(Owner)
