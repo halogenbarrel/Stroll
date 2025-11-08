@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ dog.dog_name }}</h2>
+<img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
+<ul>
+  <li>Weight: {{ dog.weight }} lbs</li>
+  <li>Age: {{ dog.age }}</li>
+  <li>Temperament:</li>
+  <ul>
+    {% for trait, value in dog.temperament.items %}
+      <li>{{ trait|capfirst }}: {{ value|yesno:"Yes,No" }}</li>
+    {% endfor %}
+  </ul>
+</ul>
+{% endblock %}

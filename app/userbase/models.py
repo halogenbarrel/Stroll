@@ -1,5 +1,7 @@
 from django.db import models
+from decimal import Decimal
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # please note that django provides a user paradigm already. (im not looking up how to spell that.)
 
@@ -49,19 +51,54 @@ class Owner(models.Model):
 class Doggy(models.Model):
     """
     Stores a name, charfield of len 50
+    Stores dog breed, charfield len 100, optional blank
+    Stores weight any value from 0 to 350 with up to one decimal 
+    Stores age of any int from 0 to 35 
+    Stores list of predefined temperaments with associated bool value
+    Allows photo to be uploaded - optional with default as paw print
     Stores an owner, a foreign key. When owner deleted, all "Doggy" as well
-    FIXME Store weight :: cap weight and verify type. Cap to one decimal
-    FIXME Store age :: cap age and verify type.
-    TODO Store an list of temperments
-    like permissions but more
-    maybe in the form ( lazy, True or False ) as a tuple?
     """
 
     dog_name = models.CharField(max_length=50)
-    weight = models.FloatField(default=0.0)
-    age = models.FloatField(default=0.0)
-    # TODO Fill in second field
+    breed = models.CharField(max_length=100, blank=True)
+    weight = models.DecimalField(
+        max_digits=5, #allow up to 999.9 lbs
+        decimal_places=1,
+        validators=[
+            MinValueValidator(0.0),
+            MaxValueValidator(350.0) #caps at 350 - heaviest dog ever recorded =343
+        ],
+        default=Decimal('0.0'))
+    
+    age = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(35) #oldest dog ever was 31
+        ],
+    default=0)
+
+    #predefined temperament traits stored as key-value booleans
+    temperament = models.JSONField(default={
+        'friendly': False,
+        'playful': False,
+        'lazy': False,
+        'protective': False,
+        'anxious': False,
+        'obedient': False,
+        'aggressive': False,
+        'shy': False,
+        'vocal': False,
+    })
+
+    photo = models.ImageField(
+        upload_to='dog_photos/', null=True, blank=True, 
+        default='dog_photos/default_paw.png'  # path relative to MEDIA_ROOT
+    )
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.dog_name
+
 
 class Job(models.Model):
     """
