@@ -11,6 +11,17 @@
             inset 2px 2px 5px rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
         border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 100px;
+    }
+
+    .card-link {
+        text-decoration: none;
+        display: block;
+        height: 100%;
     }
 
     .card:hover {
@@ -19,6 +30,7 @@
             -6px -6px 20px rgba(255, 255, 255, 0.9),
             inset 2px 2px 5px rgba(255, 255, 255, 0.2);
         background: rgba(114, 161, 231, 1);
+        cursor: pointer;
     }
 
     .card-body {
@@ -29,6 +41,8 @@
         color: #2c3e50;
         font-size: 1.5rem;
         margin-bottom: 1.5rem;
+        text-align: center;
+        width: 100%;
     }
 
     /* Custom button styling that extends Bootstrap */
@@ -69,60 +83,83 @@
         justify-content: center;
         text-align: center;
         height: 100%;
+        width: 100%;
+    }
+
+    .card-body h2 {
+        margin: 0;
+        width: 100%;
+        text-align: center;
     }
 </style>
 {% endblock %}
 
 {% block content %}
+
+{% if user.is_authenticated %}
 <div class="dashboard-container">
     <h1 class="welcome-text">Welcome to Stroll</h1>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Dog Management</h2>
-                    <a href="{% url 'dog_list' %}" class="btn btn-primary">View All Dogs</a>
-                </div>
-            </div>
-        </div>
 
+        {% if user.owner_profile %}
         <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Create Dog Profile</h2>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
-                    {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-secondary">Login to Add Dogs</a>
-                    {% endif %}
+            <a href="{% url 'dog_list' %}" class="card-link">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Dog Management</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
+        {% endif %}
 
+        {% if user.owner_profile %}
         <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Jobs</h2>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'job_board:job_list' %}" class="btn btn-primary">View Jobs</a>
-                    {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-secondary">Login to View Jobs</a>
-                    {% endif %}
+            {% comment %} <a href="{% url 'dog_create' %}" class="card-link">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Create Dog Profile</h2>
+                    </div>
                 </div>
-            </div>
+            </a> {% endcomment %}
         </div>
+        {% endif %}
+
+        {% if user.walker_profile %}
+        <div class="col">
+            <a href="{% url 'job_list' %}" class="card-link">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Jobs</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endif %}
 
         {% if user.is_staff %}
         <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Admin</h2>
-                    <a href="{% url 'admin:index' %}" class="btn btn-primary">Admin Panel</a>
+            <a href="{% url 'admin:index' %}" class="card-link">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Admin</h2>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         {% endif %}
     </div>
 </div>
+{% else %}
+<div class="col">
+            <a href="{% url 'login' %}" class="card-link">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Login</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+{% endif %}
 {% endblock %}

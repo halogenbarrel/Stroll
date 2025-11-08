@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
 from userbase.models import Doggy, Walker, Owner
 from django.db.models import Count
@@ -18,6 +19,9 @@ def register(request):
                     user=user,
                     bio=form.cleaned_data['bio']
                 )
+                
+                perms = Permission.objects.filter(codename__in=['can_accept_jobs', 'can_complete_jobs'])
+                user.user_permissions.add(*perms)
             
             # Create Owner profile if selected
             if form.cleaned_data['is_owner']:
@@ -26,6 +30,10 @@ def register(request):
                     address=form.cleaned_data['address'],
                     phone_number=form.cleaned_data['phone_number']
                 )
+                
+                perms = Permission.objects.filter(codename__in=['can_create_jobs', 'can_manage_dogs'])
+                user.user_permissions.add(*perms)
+                
             login(request, user)
             return redirect('/')
     else:
