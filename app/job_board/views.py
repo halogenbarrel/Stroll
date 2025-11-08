@@ -29,9 +29,9 @@ def job_create(request):
         form = JobForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('job_list')
+            return redirect('job_board:job_list')
     else:
         form = JobForm()
-    return render(request, 'job_board/create_job.html', {'form': form})
+    return render(request, 'job_board/job_create.html', {'form': form})
 
 
