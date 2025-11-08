@@ -17,7 +17,7 @@ def create_dog(request):
         form = DoggyForm(request.POST, request.FILES)
         if form.is_valid():
             dog = form.save(commit=False)
-            dog.owner = request.user.owner  # assuming Owner is linked to User
+            dog.owner = request.user.owner_profile  # assuming Owner is linked to User
             dog.save()
             form.save_m2m()
             return redirect('dog_detail', dog.id)
@@ -27,19 +27,19 @@ def create_dog(request):
 
 @login_required
 def edit_dog(request, dog_id):
-    dog = get_object_or_404(Doggy, id=dog_id, owner=request.user.owner)
+    dog = get_object_or_404(Doggy, id=dog_id, owner=request.user.owner_profile)
     if request.method == 'POST':
         form = DoggyForm(request.POST, request.FILES, instance=dog)
         if form.is_valid():
             form.save()
-            return redirect('dog_detail', dog.id)
+            return redirect('dog_detail', dog.id) # type: ignore
     else:
         form = DoggyForm(instance=dog)
     return render(request, 'dogs/edit_dog.html', {'form': form, 'dog': dog})
 
 @login_required
 def owner_dashboard(request):
-    dogs = Doggy.objects.filter(owner=request.user.owner)
+    dogs = Doggy.objects.filter(owner=request.user.owner_profile)
     return render(request, 'dogs/owner_dashboard.html', {'dogs': dogs})
 
 

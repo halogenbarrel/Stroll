@@ -2,6 +2,7 @@ from django.db import models
 from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from dogs.models import Temperament
 
 # please note that django provides a user paradigm already. (im not looking up how to spell that.)
 
@@ -14,7 +15,8 @@ class Walker(models.Model):
     A user can be both a walker and an owner.
     """
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='walker_profile')
+    #switching model to OneToOneField so users can only have one walker profile
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='walker_profile')
     bio = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"Walker: {self.user.username}"
@@ -34,7 +36,8 @@ class Owner(models.Model):
     A user can be both an owner and a walker.
     """
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_profile')
+    #switching model to OneToOneField so users can only have one owner profile
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='owner_profile')
     address = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
@@ -58,7 +61,6 @@ class Doggy(models.Model):
     Allows photo to be uploaded - optional with default as paw print
     Stores an owner, a foreign key. When owner deleted, all "Doggy" as well
     """
-
     dog_name = models.CharField(max_length=50)
     breed = models.CharField(max_length=100, blank=True)
     weight = models.DecimalField(
@@ -77,18 +79,7 @@ class Doggy(models.Model):
         ],
     default=0)
 
-    #predefined temperament traits stored as key-value booleans
-    temperament = models.JSONField(default={
-        'friendly': False,
-        'playful': False,
-        'lazy': False,
-        'protective': False,
-        'anxious': False,
-        'obedient': False,
-        'aggressive': False,
-        'shy': False,
-        'vocal': False,
-    })
+    temperaments = models.ManyToManyField(Temperament)
 
     photo = models.ImageField(
         upload_to='dog_photos/', null=True, blank=True, 
