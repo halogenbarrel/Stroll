@@ -90,6 +90,19 @@
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
+                    <h2 class="card-title">Create Dog Profile</h2>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-secondary">Login to Add Dogs</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
                     <h2 class="card-title">Jobs</h2>
                     {% if user.is_authenticated %}
                     <a href="{% url 'job_board:job_list' %}" class="btn btn-primary">View Jobs</a>

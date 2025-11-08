@@ -23,7 +23,7 @@ def create_dog(request):
             return redirect('dog_detail', dog.id)
     else:
         form = DoggyForm()
-    return render(request, 'dogs/create_dog.html', {'form': form})
+    return render(request, 'dogs/dog_create.html', {'form': form})
 
 @login_required
 def edit_dog(request, dog_id):
@@ -39,7 +39,7 @@ def edit_dog(request, dog_id):
 
 @login_required
 def owner_dashboard(request):
-    dogs = Doggy.objects.filter(owner=request.user)
+    dogs = Doggy.objects.filter(owner=request.user.owner)
     return render(request, 'dogs/owner_dashboard.html', {'dogs': dogs})
 
 
