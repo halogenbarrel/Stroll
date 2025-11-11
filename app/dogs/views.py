@@ -35,7 +35,7 @@ def edit_dog(request, dog_id):
             return redirect('dog_detail', dog.id) # type: ignore
     else:
         form = DoggyForm(instance=dog)
-    return render(request, 'dogs/edit_dog.html', {'form': form, 'dog': dog})
+    return render(request, 'dogs/dog_edit.html', {'form': form, 'dog': dog})
 
 @login_required
 def owner_dashboard(request):

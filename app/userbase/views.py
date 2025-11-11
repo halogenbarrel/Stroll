@@ -52,37 +52,15 @@ def owner_settings(request):
     return render(request, 'userbase/owner_settings.html')
 
 @login_required
-def edit_owner_profile(request):
-    return render(request, 'userbase/edit_owner_profile.html')
+def edit_profile(request):
+    user = request.user
 
+    if request.method == 'POST':
+        form = StrollUserCreationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('userbase/owner_settings.html')
+    else:
+        form = StrollUserCreationForm(instance=user)
 
-'''
-MOVING TO DOGS app
-
-def dog_list(request):
-    # Pull from database
-    name_lookup = request.GET.get("name", None)
-    # grab all dogs
-    dog = Doggy.objects.all()
-
-    if name_lookup:
-        dog = dog.filter(user__name=name_lookup)
-
-    user_with_dog = Doggy.objects.values("dog_name").annotate(num_posts=Count("id"))
-    total_posts = Doggy.objects.count()
-
-    # Extract the username from user_with_dog
-    owner = [user_with_dog["user_name"] for user_with_dog in user_with_dog]
-
-    return render(
-        request,
-        "post.html",
-        {
-            "dog name": dog,
-            "owner": owner,
-            "user_with_dog": user_with_dog,
-            "total_posts": total_posts,
-        },
-    )
-
-'''
+    return render(request, 'userbase/edit_profile.html', {'form': form})
