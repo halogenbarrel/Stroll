@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from userbase.models import Doggy, Walker, Owner
 from django.db.models import Count
 from .forms import StrollUserCreationForm
+from django.contrib.auth.models import Permission
 
 
 def register(request):
@@ -19,6 +20,10 @@ def register(request):
                     bio=form.cleaned_data['bio']
                 )
             
+            #keaghons code to add permissions
+            perms = Permission.objects.filter(codename__in=['can_accept_jobs', 'can_complete_jobs'])
+            user.user_permissions.add(*perms)
+
             # Create Owner profile if selected
             if form.cleaned_data['is_owner']:
                 Owner.objects.create(
@@ -26,6 +31,11 @@ def register(request):
                     address=form.cleaned_data['address'],
                     phone_number=form.cleaned_data['phone_number']
                 )
+
+                #keaghons code to add permissions
+                perms = Permission.objects.filter(codename__in=['can_create_jobs', 'can_manage_dogs'])
+                user.user_permissions.add(*perms)
+
             login(request, user)
             return redirect('/')
     else:
