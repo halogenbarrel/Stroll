@@ -11,7 +11,7 @@
   <li>Age: {{ dog.age }}</li>
   <li>Temperament:</li>
   <ul>
-    {% for temperament in dog.temperaments.all %}
+    {% for temperament in dog.temper.all %}
     <li>{{ temperament.name }}</li>
     {% empty %}
     <li>No temperaments listed.</li>

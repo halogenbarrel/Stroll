@@ -7,6 +7,16 @@
   <!--button to link to create a job posting-->
   <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
 
+  <form method="get" class="mb-3">
+    {% if request.GET.filter %}
+      <input type="hidden" name="filter" value="off">
+      <button type="submit" class="btn btn-secondary">Show All Jobs</button>
+    {% else %}
+      <input type="hidden" name="filter" value="on">
+      <button type="submit" class="btn btn-secondary">Show Filtered Jobs</button>
+    {% endif %}
+  </form>
+
   {% if jobs %}
     <ul class="list-group">
       {% for job in jobs %}
