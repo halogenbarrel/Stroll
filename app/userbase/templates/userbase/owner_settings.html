@@ -53,7 +53,7 @@
 
     <!-- only owners can see button to edit dogs, and they can only view their dogs in edit page-->
     {% if user.owner_profile %}
-    <a href="{% url 'userbase:owner_settings' %}" class="settings-button">Edit Dog Profiles</a>
+    <a href="{% url 'owner_dashboard' %}" class="settings-button">Edit Dog Profiles</a>
     {% endif %}
 
   </div>
