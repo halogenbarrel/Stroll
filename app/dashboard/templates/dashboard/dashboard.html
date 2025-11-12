@@ -114,18 +114,6 @@
         </div>
         {% endif %}
 
-        {% if user.owner_profile %}
-        <div class="col">
-            {% comment %} <a href="{% url 'dog_create' %}" class="card-link">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Create Dog Profile</h2>
-                    </div>
-                </div>
-            </a> {% endcomment %}
-        </div>
-        {% endif %}
-
         {% if user.walker_profile %}
         <div class="col">
             <a href="{% url 'job_list' %}" class="card-link">
