@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from userbase.models import Job
+from django.contrib.auth.decorators import login_required
 from .forms import JobForm
 
 def job_detail(request, job_id):
@@ -10,7 +11,7 @@ def job_detail(request, job_id):
     context = {"job": job}
     return render(request, 'job_board/job_detail.html', context)
 
-
+@login_required
 def job_list(request):
     """
     Display all jobs from database

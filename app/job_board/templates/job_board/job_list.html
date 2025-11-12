@@ -2,31 +2,32 @@
 
 {% block content %}
 
-  <h2>Available Jobs</h2>
+<h2>Available Jobs</h2>
 
-  <!--button to link to create a job posting-->
-  <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
+<!--button to link to create a job posting-->
+{% if user.is_owner %}
+<a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
+{% endif %}
+{% if jobs %}
+<ul class="list-group">
+  {% for job in jobs %}
+  <li class="list-group-item">
+    <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
+    <br>
+    {% if job.location %}
+    Location: {{ job.location }}
+    {% endif %}
+    <br>
+    {% if job.description %}
+    <em>Description :</em> {{ job.description }}
+    {% endif %}
+    <br>
+    Status: {{ job.status }}
+  </li>
+  {% endfor %}
+</ul>
 
-  {% if jobs %}
-    <ul class="list-group">
-      {% for job in jobs %}
-        <li class="list-group-item">
-          <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
-          <br>
-          {% if job.location %}
-            Location: {{ job.location }}
-          {% endif %}
-          <br>
-          {% if job.description  %}
-            <em>Description :</em> {{ job.description  }}
-          {% endif %}
-          <br>
-          Status: {{ job.status }}
-        </li>
-      {% endfor %}
-    </ul>
-
-  {% else %}
-    <p>No open or assigned jobs at the moment. Check back soon!</p>
-  {% endif %}
+{% else %}
+<p>No open or assigned jobs at the moment. Check back soon!</p>
+{% endif %}
 {% endblock %}
