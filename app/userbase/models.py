@@ -2,7 +2,6 @@ from django.db import models
 from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
-from dogs.models import Temperament
 
 # please note that django provides a user paradigm already. (im not looking up how to spell that.)
 
@@ -52,17 +51,34 @@ class Owner(models.Model):
 
 
 class Doggy(models.Model):
+    # Predefined choices for dog temperaments
+    TEMPERAMENT_CHOICES = [
+        ('FRIENDLY', 'Friendly'),
+        ('SHY', 'Shy'),
+        ('ENERGETIC', 'Energetic'),
+        ('CALM', 'Calm'),
+        ('PROTECTIVE', 'Protective'),
+        ('PLAYFUL', 'Playful'),
+        ('INDEPENDENT', 'Independent'),
+        ('SOCIAL', 'Social'),
+    ]
+
     """
     Stores a name, charfield of len 50
     Stores dog breed, charfield len 100, optional blank
     Stores weight any value from 0 to 350 with up to one decimal 
     Stores age of any int from 0 to 35 
-    Stores list of predefined temperaments with associated bool value
+    Stores temperament from predefined choices
     Allows photo to be uploaded - optional with default as paw print
     Stores an owner, a foreign key. When owner deleted, all "Doggy" as well
     """
     dog_name = models.CharField(max_length=50)
     breed = models.CharField(max_length=100, blank=True)
+    temperament = models.CharField(
+        max_length=20,
+        choices=TEMPERAMENT_CHOICES,
+        default='FRIENDLY'
+    )
     weight = models.DecimalField(
         max_digits=5, #allow up to 999.9 lbs
         decimal_places=1,
@@ -79,7 +95,6 @@ class Doggy(models.Model):
         ],
     default=0)
 
-    temperaments = models.ManyToManyField(Temperament)
 
     photo = models.ImageField(
         upload_to='dog_photos/', null=True, blank=True, 
