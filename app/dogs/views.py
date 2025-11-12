@@ -34,5 +34,23 @@ def create_dog(request):
             return redirect('dog_list')
     else:
         form = DoggyForm()
-    
     return render(request, 'dogs/dog_create.html', {'form': form})
+
+@login_required
+def edit_dog(request, dog_id):
+    dog = get_object_or_404(Doggy, id=dog_id, owner=request.user.owner_profile)
+    if request.method == 'POST':
+        form = DoggyForm(request.POST, request.FILES, instance=dog)
+        if form.is_valid():
+            form.save()
+            return redirect('dog_detail', dog.id) # type: ignore
+    else:
+        form = DoggyForm(instance=dog)
+    return render(request, 'dogs/dog_edit.html', {'form': form, 'dog': dog})
+
+@login_required
+def owner_dashboard(request):
+    dogs = Doggy.objects.filter(owner=request.user.owner_profile)
+    return render(request, 'dogs/owner_dashboard.html', {'dogs': dogs})
+
+

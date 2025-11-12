@@ -49,8 +49,13 @@
 <div class="settings-container">
   <h2>Settings</h2>
   <div class="settings-options">
-    <a href="{% url 'userbase:edit_owner_profile' %}" class="settings-button">Edit My Info</a>
+    <a href="{% url 'userbase:edit_profile' %}" class="settings-button">Edit My Info</a>
+
+    <!-- only owners can see button to edit dogs, and they can only view their dogs in edit page-->
+    {% if user.owner_profile %}
     <a href="{% url 'owner_dashboard' %}" class="settings-button">Edit Dog Profiles</a>
+    {% endif %}
+
     <a href="{% url 'logout' %}" class="settings-button logout">Logout</a>
   </div>
 </div>

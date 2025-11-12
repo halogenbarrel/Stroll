@@ -101,13 +101,29 @@
 
     {% if user.is_authenticated %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
+        
 
-        {% if user.owner_profile %}
+        <!--Want all accounts to be able to view dogs-->
         <div class="col">
-            <a href="{% url 'dog_list' %}" class="card-link">
+        <a href="{% url 'dog_list' %}" class="card-link">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">All Dogs</h2>
+                </div>
+            
+            </div>
+        </a>
+        </div>
+    
+        
+        <!--Only owners can create dog profiles-->
+        {% if user.owner_profile %}
+        
+        <div class="col">
+            <a href="{% url 'create_dog' %}" class="card-link">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h2 class="card-title">Dog Management</h2>
+                        <h2 class="card-title">Create Dog Profile</h2>
                     </div>
                 </div>
             </a>
