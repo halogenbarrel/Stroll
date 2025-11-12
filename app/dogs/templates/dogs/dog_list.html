@@ -19,17 +19,42 @@
     height: 200px;
     object-fit: cover;
   }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .header-container h2 {
+    margin: 0;
+  }
 </style>
 
-<h2>All Dogs</h2>
-<div class="dog-grid">
-  {% for dog in dogs %}
-    <div class="dog-card">
-      <a href="{% url 'dog_detail' dog.id %}">
-        <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
-        <h3>{{ dog.dog_name }}</h3>
-      </a>
-    </div>
-  {% endfor %}
+<div class="header-container">
+  <h2>My Dogs</h2>
+  {% if not error_message %}
+    <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
+  {% endif %}
 </div>
+
+{% if error_message %}
+  <div class="alert alert-warning">
+    {{ error_message }}
+  </div>
+{% else %}
+  {% if dogs %}
+    <div class="dog-grid">
+      {% for dog in dogs %}
+        <div class="dog-card">
+          <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
+          <h3>{{ dog.dog_name }}</h3>
+        </div>
+      {% empty %}
+        <p>You haven't added any dogs yet.</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endif %}
 {% endblock %}

@@ -3,8 +3,16 @@ from userbase.models import Doggy
 from django.contrib.auth.decorators import login_required
 from .forms import DoggyForm
 
+@login_required
 def dog_list(request):
-    dogs = Doggy.objects.all()
+    if not hasattr(request.user, 'owner_profile'):
+        # Redirect non-owners to an appropriate page or show an error message
+        return render(request, 'dogs/dog_list.html', {
+            'dogs': [],
+            'error_message': 'You must be registered as an owner to view dogs.'
+        })
+    
+    dogs = Doggy.objects.filter(owner=request.user.owner_profile)
     return render(request, 'dogs/dog_list.html', {'dogs': dogs})
 
 def dog_detail(request, dog_id):
@@ -13,14 +21,17 @@ def dog_detail(request, dog_id):
 
 @login_required
 def create_dog(request):
+    if not hasattr(request.user, 'owner_profile'):
+        return redirect('dog_list')
+        
     if request.method == 'POST':
         form = DoggyForm(request.POST, request.FILES)
         if form.is_valid():
             dog = form.save(commit=False)
-            dog.owner = request.user.owner_profile  # assuming Owner is linked to User
+            dog.owner = request.user.owner_profile
             dog.save()
-            form.save_m2m()
-            return redirect('dog_detail', dog.id)
+            form.save_m2m()  # Save the many-to-many relationships (temperaments)
+            return redirect('dog_list')
     else:
         form = DoggyForm()
     return render(request, 'dogs/dog_create.html', {'form': form})

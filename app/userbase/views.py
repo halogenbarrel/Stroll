@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
 from userbase.models import Doggy, Walker, Owner
 from django.db.models import Count
@@ -19,6 +20,9 @@ def register(request):
                     user=user,
                     bio=form.cleaned_data['bio']
                 )
+                
+                perms = Permission.objects.filter(codename__in=['can_accept_jobs', 'can_complete_jobs'])
+                user.user_permissions.add(*perms)
             
             #keaghons code to add permissions
             perms = Permission.objects.filter(codename__in=['can_accept_jobs', 'can_complete_jobs'])

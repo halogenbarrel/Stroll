@@ -96,10 +96,10 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
 <div class="dashboard-container">
     <h1 class="welcome-text">Welcome to Stroll</h1>
 
+    {% if user.is_authenticated %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         
 
@@ -128,17 +128,11 @@
                 </div>
             </a>
         </div>
-
         {% endif %}
-        
 
-        <!--All logged in users can view currently.
-        TODO: update so owners can view only jobs theyve posted
-        and walkers can view all available or accepted jobs
-        -->
-        {% if user.is_authenticated %}
+        {% if user.walker_profile %}
         <div class="col">
-            <a href="{% url 'job_board:job_list' %}" class="card-link">
+            <a href="{% url 'job_list' %}" class="card-link">
                 <div class="card h-100">
                     <div class="card-body">
                         <h2 class="card-title">Jobs</h2>
@@ -147,7 +141,6 @@
             </a>
         </div>
         {% endif %}
-
 
         {% if user.is_staff %}
         <div class="col">
@@ -160,9 +153,10 @@
             </a>
         </div>
         {% endif %}
-
-        {% else %}
-        <div class="col">
+    </div>
+</div>
+{% else %}
+<div class="col">
             <a href="{% url 'login' %}" class="card-link">
                 <div class="card h-100">
                     <div class="card-body">
@@ -171,7 +165,5 @@
                 </div>
             </a>
         </div>
-        {% endif %}
-    </div>
-</div>
+{% endif %}
 {% endblock %}
