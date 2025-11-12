@@ -62,6 +62,12 @@ class Doggy(models.Model):
         ('INDEPENDENT', 'Independent'),
         ('SOCIAL', 'Social'),
     ]
+    
+    ENERGY_LEVEL_CHOICES = [
+        ('LOW', 'Low'),
+        ('MEDIUM', 'Medium'),
+        ('HIGH', 'High'),
+    ]
 
     """
     Stores a name, charfield of len 50
@@ -78,6 +84,11 @@ class Doggy(models.Model):
         max_length=20,
         choices=TEMPERAMENT_CHOICES,
         default='FRIENDLY'
+    )
+    energy_level = models.CharField(
+        max_length=10,
+        choices=ENERGY_LEVEL_CHOICES,
+        default='MEDIUM'
     )
     weight = models.DecimalField(
         max_digits=5, #allow up to 999.9 lbs
