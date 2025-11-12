@@ -10,6 +10,7 @@ class StrollUserCreationForm(UserCreationForm):
 
     # Walker fields
     bio = forms.CharField(widget=forms.Textarea, required=False)
+
     TEMPERAMENT_CHOICES = [
         ("FRIENDLY", "Friendly"),
         ("SHY", "Shy"),
@@ -27,8 +28,22 @@ class StrollUserCreationForm(UserCreationForm):
         ("HIGH", "High"),
     ]
 
-    temperament = forms.ChoiceField(choices=TEMPERAMENT_CHOICES)
-    energy_level = forms.ChoiceField(choices=ENERGY_LEVEL_CHOICES)
+    WEIGHT_CHOICES = [
+        ("0-20", "Small"),
+        ("21-50", "Medium"),
+        ("51-100", "Large"),
+        ("100+", "X-Large"),
+    ]
+
+    temperament = forms.MultipleChoiceField(
+        choices=TEMPERAMENT_CHOICES, widget=forms.CheckboxSelectMultiple
+    )
+    energy_level = forms.MultipleChoiceField(
+        choices=ENERGY_LEVEL_CHOICES, widget=forms.CheckboxSelectMultiple
+    )
+    weight_level = forms.MultipleChoiceField(
+        choices=WEIGHT_CHOICES, widget=forms.CheckboxSelectMultiple
+    )
 
     # Owner fields
     address = forms.CharField(widget=forms.Textarea, required=False)
