@@ -96,10 +96,10 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
 <div class="dashboard-container">
     <h1 class="welcome-text">Welcome to Stroll</h1>
 
+    {% if user.is_authenticated %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
         {% if user.owner_profile %}
