@@ -50,6 +50,8 @@ def register(request):
 
             login(request, user)
             return redirect("/")
+        else:
+            print("FORM ERRORS:", form.errors)
     else:
         form = StrollUserCreationForm()
 
