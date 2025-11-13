@@ -63,6 +63,7 @@ class StrollUserCreationForm(UserCreationForm):
             "phone_number",
             "energy_level",
             "temperament",
+            "weight_level",
         )
 
     def clean(self):

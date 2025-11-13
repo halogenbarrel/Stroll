@@ -24,8 +24,6 @@ class Walker(models.Model):
         User, on_delete=models.CASCADE, related_name="walker_profile"
     )
 
-    bio = models.TextField(blank=True, null=True)
-
     temperament = models.JSONField(default=list, blank=True)
     energy_level = models.JSONField(default=list, blank=True)
     weight_range = models.JSONField(default=list, blank=True)
