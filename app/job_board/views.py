@@ -11,7 +11,8 @@ def job_detail(request, job_id):
     """
     job = get_object_or_404(Job, id=job_id)
     context = {"job": job}
-    return render(request, 'job_board/job_detail.html', context)
+    return render(request, "job_board/job_detail.html", context)
+
 
 @login_required
 def job_list(request):
@@ -42,20 +43,27 @@ def job_list(request):
             max_weight = 300
 
         # Walker: show assigned + matching open jobs
-        assigned_jobs = Job.objects.filter(walker=walker).order_by("scheduled_date", "scheduled_time")
-        available_jobs = Job.objects.filter(
-            status="OPEN",
-            dog__temperament__in=walker.temperament,
-            dog__energy_level__in=walker.energy_level,
-            dog__weight__gte=min_weight,
-            dog__weight__lte=max_weight,
-        ).exclude(walker__isnull=False).order_by("created_at")
+        assigned_jobs = Job.objects.filter(walker=walker).order_by(
+            "scheduled_date", "scheduled_time"
+        )
+        available_jobs = (
+            Job.objects.filter(
+                status="OPEN",
+                dog__temperament__in=walker.temperament,
+                dog__energy_level__in=walker.energy_level,
+                dog__weight__gte=min_weight,
+                dog__weight__lte=max_weight,
+            )
+            .exclude(walker__isnull=False)
+            .order_by("created_at")
+        )
 
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
         context["available_jobs"] = available_jobs
 
     return render(request, "job_board/job_list.html", context)
+
 
 @login_required
 def accept_job(request, job_id):
@@ -72,13 +80,11 @@ def job_create(request):
     """
     Create a new job posting
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = JobForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('job_board:job_list')
+            return redirect("job_board:job_list")
     else:
         form = JobForm()
-    return render(request, 'job_board/job_create.html', {'form': form})
-
-
+    return render(request, "job_board/job_create.html", {"form": form})

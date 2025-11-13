@@ -36,16 +36,19 @@ class StrollUserCreationForm(UserCreationForm):
     ]
 
     temperament = forms.MultipleChoiceField(
-        choices=TEMPERAMENT_CHOICES, widget=forms.CheckboxSelectMultiple,
-        required=False # temporary fix
+        choices=TEMPERAMENT_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,  # temporary fix
     )
     energy_level = forms.MultipleChoiceField(
-        choices=ENERGY_LEVEL_CHOICES, widget=forms.CheckboxSelectMultiple,
-        required=False # temporary fix
+        choices=ENERGY_LEVEL_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,  # temporary fix
     )
-    weight_level = forms.MultipleChoiceField(
-        choices=WEIGHT_CHOICES, widget=forms.CheckboxSelectMultiple,
-        required=False # temporary fix
+    weight_range = forms.MultipleChoiceField(
+        choices=WEIGHT_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,  # temporary fix
     )
 
     # Owner fields
@@ -66,7 +69,7 @@ class StrollUserCreationForm(UserCreationForm):
             "phone_number",
             "energy_level",
             "temperament",
-            "weight_level",
+            "weight_range",
         )
 
     def clean(self):
@@ -81,7 +84,7 @@ class StrollUserCreationForm(UserCreationForm):
 
         # if walker, make walker fields required
         if is_walker:
-            for field in ("temperament", "energy_level", "weight_level"):
+            for field in ("temperament", "energy_level", "weight_range"):
                 if not cleaned_data.get(field):
                     self.add_error(field, "This field is required for walkers.")
 
