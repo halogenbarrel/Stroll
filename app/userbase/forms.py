@@ -36,13 +36,16 @@ class StrollUserCreationForm(UserCreationForm):
     ]
 
     temperament = forms.MultipleChoiceField(
-        choices=TEMPERAMENT_CHOICES, widget=forms.CheckboxSelectMultiple
+        choices=TEMPERAMENT_CHOICES, widget=forms.CheckboxSelectMultiple,
+        required=False # temporary fix
     )
     energy_level = forms.MultipleChoiceField(
-        choices=ENERGY_LEVEL_CHOICES, widget=forms.CheckboxSelectMultiple
+        choices=ENERGY_LEVEL_CHOICES, widget=forms.CheckboxSelectMultiple,
+        required=False # temporary fix
     )
     weight_level = forms.MultipleChoiceField(
-        choices=WEIGHT_CHOICES, widget=forms.CheckboxSelectMultiple
+        choices=WEIGHT_CHOICES, widget=forms.CheckboxSelectMultiple,
+        required=False # temporary fix
     )
 
     # Owner fields
@@ -75,5 +78,17 @@ class StrollUserCreationForm(UserCreationForm):
             raise forms.ValidationError(
                 "You must select at least one role (Walker or Owner)"
             )
+
+        # if walker, make walker fields required
+        if is_walker:
+            for field in ("temperament", "energy_level", "weight_level"):
+                if not cleaned_data.get(field):
+                    self.add_error(field, "This field is required for walkers.")
+
+        # if owner, make owner fields required
+        if is_owner:
+            for field in ("address", "phone_number"):
+                if not cleaned_data.get(field):
+                    self.add_error(field, "This field is required for owners.")
 
         return cleaned_data
