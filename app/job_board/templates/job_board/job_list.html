@@ -4,29 +4,70 @@
 
   <h2>Available Jobs</h2>
 
-  <!--button to link to create a job posting-->
-  <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
+  <!--button to link to create a job posting only for OWNERS-->
+  {% if role == "owner" %}
+    <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
 
-  {% if jobs %}
-    <ul class="list-group">
-      {% for job in jobs %}
-        <li class="list-group-item">
-          <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
-          <br>
-          {% if job.location %}
+    {% if jobs %}
+      <ul class="list-group mt-3">
+        {% for job in jobs %}
+          <li class="list-group-item">
+            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
+            <br>
+            {% if job.location %}
+              Location: {{ job.location }}
+            {% endif %}
+            <br>
+            {% if job.description  %}
+              <em>Description :</em> {{ job.description  }}
+            {% endif %}
+            <br>
+            Status: {{ job.status }}
+          </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <p>You haven't posted any jobs yet.</p>
+    {% endif %}
+  {% endif %}
+
+<!--Walker specific job page-->
+  {% if role == "walker" %}
+    <h3 class="mt-4">Assigned Jobs</h3>
+    {% if assigned_jobs %}
+      <ul class="list-group">
+        {% for job in assigned_jobs %}
+          <li class="list-group-item list-group-item-info">
+            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
+            Scheduled: {{ job.scheduled_date }} at {{ job.scheduled_time }}<br>
             Location: {{ job.location }}
-          {% endif %}
-          <br>
-          {% if job.description  %}
-            <em>Description :</em> {{ job.description  }}
-          {% endif %}
-          <br>
-          Status: {{ job.status }}
-        </li>
-      {% endfor %}
-    </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No upcoming jobs.</p>
+    {% endif %}
 
-  {% else %}
-    <p>No open or assigned jobs at the moment. Check back soon!</p>
+    <hr>
+
+    <h3>Available Jobs</h3>
+    {% if available_jobs %}
+      <ul class="list-group">
+        {% for job in available_jobs %}
+          <li class="list-group-item">
+            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
+            {% if job.location %}Location: {{ job.location }}<br>{% endif %}
+            {% if job.description %}<em>Description:</em> {{ job.description }}<br>{% endif %}
+            <form method="post" action="{% url 'job_board:accept_job' job.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success btn-sm mt-2">Accept Job</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No matching jobs available.</p>
+    {% endif %}
   {% endif %}
 {% endblock %}
+
