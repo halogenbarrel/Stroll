@@ -1,25 +1,33 @@
-# Hello bro.
-## Instructions
-This requires [Docker](https://docs.docker.com/compose/install/)
 
-This also requires an .env file, which is purposefully ignored in every commit. \
-**Please** do not force it in, just grab it from the discord on first clone and you should be good to go.
+# Stroll
+## Details
+Stroll is a web application built on django, for both front and backend.
+## Dev Instructions
+This project has an .env file, which is purposefully ignored in every commit. \
+**Please** do not force it into your commits.
 
-While inside of the root of the project, for initial run please ->
 ``` sh
-docker compose up -d --build
+git clone https://github.com/halogenbarrel/Stroll.git && cd Stroll
+```
+``` sh
+python -m venv .env_stroll && source .env_stroll/bin/activate
 ```
 
-To stop the server (if it's a daemon)
+Requirements install
 ``` sh
-docker compose down
+pip install -r requirements.txt
 ```
 
-## In the event of a build failure, please hit me up, maybe try these.
-
-This deletes the created volumes, WILL WIPE LOCAL DB 
+To start up the dev server
 ``` sh
-docker compose down -v
+python app/manage.py runserver
 ```
 
-You can also get rid of the -d option when you are debugging for more verbosity
+### Contributing
+
+Update any requirements that may have been added
+``` sh
+pip freeze > requirements.txt
+```
+
+please make ur commits look nice-ish :)
