@@ -28,7 +28,7 @@ def job_list(request):
         # Owner: show all their jobs theyve posted
         owner = user.owner_profile
         jobs = Job.objects.filter(owner=owner).order_by("-created_at")
-        context["jobs"] = "jobs"
+        context["jobs"] = jobs
         context["owner_jobs"] = jobs
 
     elif hasattr(user, "walker_profile"):

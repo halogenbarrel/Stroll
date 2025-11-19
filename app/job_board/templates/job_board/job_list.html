@@ -5,7 +5,7 @@
   <h2>Available Jobs</h2>
 
   <!--button to link to create a job posting only for OWNERS-->
-  {% if role == "owner" %}
+  {% if user.owner_profile %}
     <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
 
     {% if jobs %}
@@ -32,7 +32,7 @@
   {% endif %}
 
 <!--Walker specific job page-->
-  {% if role == "walker" %}
+  {% if user.walker_profile %}
     <h3 class="mt-4">Assigned Jobs</h3>
     {% if assigned_jobs %}
       <ul class="list-group">
