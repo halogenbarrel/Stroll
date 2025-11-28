@@ -139,6 +139,8 @@ class Job(models.Model):
     description = models.TextField()
 
     # Relationships
+    
+    #if the decline button is pressed, need all users to be able to see this job, not just the one who it was posted for
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
     walker = models.ForeignKey(Walker, on_delete=models.SET_NULL, null=True, blank=True)
