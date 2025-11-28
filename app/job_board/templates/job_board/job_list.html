@@ -36,11 +36,23 @@
     <h3 class="mt-4">Assigned Jobs</h3>
     {% if assigned_jobs %}
       <ul class="list-group">
+	      <!-- Need to add a button here at the end that lets user accept or decline jobs -->
         {% for job in assigned_jobs %}
-          <li class="list-group-item list-group-item-info">
-            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
+          <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+            
+		<!-- Keep job info here -->
+	  <div>
+
+	    <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
             Scheduled: {{ job.scheduled_date }} at {{ job.scheduled_time }}<br>
             Location: {{ job.location }}
+
+	  </div>
+	    <!-- Place accept / decline buttons here -->
+	    <div class = "btn-group">
+		    <button class="btn btn-primary btn-sm">Accept</button>
+		    <button class="btn btn-danger btn-sm">Decline</button>
+	    </div>
           </li>
         {% endfor %}
       </ul>
