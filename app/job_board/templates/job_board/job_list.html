@@ -49,10 +49,13 @@
 
 	  </div>
 	    <!-- Place accept / decline buttons here -->
-	    <div class = "btn-group">
-		    <button class="btn btn-primary btn-sm">Accept</button>
-		    <button class="btn btn-danger btn-sm">Decline</button>
-	    </div>
+
+	    {% if job.status == "OPEN" %}
+	    <form method = "POST" action="{% url 'job_board:accept_job' job.id %}">
+		    {% csrf_token %}
+		    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+	    </form>
+	    {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -82,4 +85,5 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+
 

@@ -73,7 +73,8 @@ def accept_job(request, job_id):
     job.scheduled_date = timezone.now().date()
     job.scheduled_time = timezone.now().time()
     job.save()
-    return redirect("job_list")
+    #this changes the job status for the owner, but does not redirect correctly back to the page it was already on
+    return redirect("job_board:job_list.html")
 
 
 def job_create(request):
@@ -88,3 +89,6 @@ def job_create(request):
     else:
         form = JobForm()
     return render(request, "job_board/job_create.html", {"form": form})
+
+
+
