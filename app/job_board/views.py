@@ -74,7 +74,7 @@ def accept_job(request, job_id):
     job.scheduled_time = timezone.now().time()
     job.save()
     #this changes the job status for the owner, but does not redirect correctly back to the page it was already on
-    return redirect("job_board:job_list.html")
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 
 def job_create(request):
