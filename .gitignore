@@ -1,5 +1,5 @@
 env_webproject
-.env
+.venv
 app/djangoproject/__pycache__
 staticfiles
 README.org
