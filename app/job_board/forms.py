@@ -6,7 +6,7 @@ class JobForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = [
-            'title', 'description', 'owner', 'dog', 'walker',
+            'title', 'description', 'owner', 'dog',
             'scheduled_date', 'scheduled_time', 'duration',
             'location', 'recurrence', 'status'
         ]
