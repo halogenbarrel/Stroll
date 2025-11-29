@@ -58,9 +58,14 @@ def job_list(request):
             .order_by("created_at")
         )
 
+        all_available_jobs = Job.objects.filter(
+                status="OPEN",
+                walker__isnull=True,
+            ).order_by("created_at")
+
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
-        context["available_jobs"] = available_jobs
+        context["available_jobs"] = all_available_jobs
 
     return render(request, "job_board/job_list.html", context)
 
