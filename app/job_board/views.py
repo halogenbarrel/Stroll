@@ -74,6 +74,18 @@ def accept_job(request, job_id):
     job.scheduled_time = timezone.now().time()
     job.save()
     #this changes the job status for the owner, but does not redirect correctly back to the page it was already on
+    #now does redirect correctly
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
+
+@login_required
+def decline_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == "POST":
+        job.walker = None
+        job.status = "OPEN"
+        job.save()
+
     return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 

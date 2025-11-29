@@ -51,11 +51,17 @@
 	    <!-- Place accept / decline buttons here -->
 
 	    {% if job.status == "OPEN" %}
-	    <form method = "POST" action="{% url 'job_board:accept_job' job.id %}">
-		    {% csrf_token %}
-		    <button type="submit" class="btn btn-success btn-sm">Accept</button>
-	    </form>
-	    <button type="submit" class"btn btn-success btn-sm">Decline</button>
+	    <div class="btn-group">
+		    <form method = "POST" action="{% url 'job_board:accept_job' job.id %}">
+			    {% csrf_token %}
+			    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+		    </form>
+		    
+		    <form method="POST" action="{% url 'job_board:decline_job' job.id %}">
+			    {% csrf_token %}
+			    <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+		    </form>
+	    </div>
 	    {% endif %}
           </li>
         {% endfor %}
