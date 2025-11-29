@@ -178,6 +178,7 @@ class Job(models.Model):
             ("ASSIGNED", "Assigned"),
             ("COMPLETED", "Completed"),
             ("CANCELLED", "Cancelled"),
+            ("WAITING FOR APPROVAL", "Waiting for Approval"),
         ],
         default="OPEN",
     )

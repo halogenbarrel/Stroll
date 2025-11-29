@@ -69,17 +69,23 @@ def job_list(request):
 
     return render(request, "job_board/job_list.html", context)
 
+def confirm_walker(request, job_id):
+    job = get_object_or_404(Job, id=job_id, status="WAITING FOR APPROVAL")
+    job.status = "ASSIGNED"
+    job.scheduled_date = timezone.now().date()
+    job.scheduled_time = timezone.now().time()
+    job.save()
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
+
 
 @login_required
 def accept_job(request, job_id):
     job = get_object_or_404(Job, id=job_id, status="OPEN")
-    job.status = "ASSIGNED"
+    job.status = "WAITING FOR APPROVAL"
     job.walker = request.user.walker_profile
     job.scheduled_date = timezone.now().date()
     job.scheduled_time = timezone.now().time()
     job.save()
-    #this changes the job status for the owner, but does not redirect correctly back to the page it was already on
-    #now does redirect correctly
     return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 @login_required

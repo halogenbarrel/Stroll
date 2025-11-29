@@ -8,7 +8,7 @@ class JobForm(forms.ModelForm):
         fields = [
             'title', 'description', 'owner', 'dog',
             'scheduled_date', 'scheduled_time', 'duration',
-            'location', 'recurrence', 'status'
+            'location', 'recurrence'
         ]
         widgets = {
             'scheduled_date': forms.DateInput(attrs={'type': 'date'}),

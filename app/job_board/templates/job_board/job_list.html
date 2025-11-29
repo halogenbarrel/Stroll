@@ -19,10 +19,23 @@
             {% endif %}
             <br>
             {% if job.description  %}
-              <em>Description :</em> {{ job.description  }}
+              Description : {{ job.description  }}
             {% endif %}
             <br>
             Status: {{ job.status }}
+            {% if job.status == "WAITING FOR APPROVAL" %}
+              <br>Assigned Walker: {{ job.walker.user.get_full_name }}
+              <!-- Button to let owner confirm and assign walker to job -->
+              <form method="post" action="{% url 'job_board:confirm_walker' job.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm mt-2">Confirm Walker</button>
+              </form>
+              <!-- Button to let owner decline the walker -->
+              <form method="post" action="{% url 'job_board:decline_job' job.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm mt-2">Decline Walker</button>
+              </form>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -84,7 +97,7 @@
           <li class="list-group-item">
             <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
             {% if job.location %}Location: {{ job.location }}<br>{% endif %}
-            {% if job.description %}<em>Description:</em> {{ job.description }}<br>{% endif %}
+            {% if job.description %}Description: {{ job.description }}<br>{% endif %}
             <form method="post" action="{% url 'job_board:accept_job' job.id %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-success btn-sm mt-2">Accept Job</button>
