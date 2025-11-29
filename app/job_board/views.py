@@ -43,7 +43,7 @@ def job_list(request):
             max_weight = 300
 
         # Walker: show assigned + matching open jobs
-        assigned_jobs = Job.objects.filter(walker=walker).order_by(
+        assigned_jobs = Job.objects.filter(walker=walker, status="ASSIGNED").order_by(
             "scheduled_date", "scheduled_time"
         )
         available_jobs = (
@@ -57,6 +57,11 @@ def job_list(request):
             .exclude(walker__isnull=False)
             .order_by("created_at")
         )
+        
+        pending_jobs = Job.objects.filter(
+            walker=walker,
+            status="WAITING FOR APPROVAL"
+        ).order_by("created_at")
 
         all_available_jobs = Job.objects.filter(
                 status="OPEN",
@@ -66,6 +71,7 @@ def job_list(request):
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
         context["available_jobs"] = all_available_jobs
+        context["pending_jobs"] = pending_jobs
 
     return render(request, "job_board/job_list.html", context)
 
