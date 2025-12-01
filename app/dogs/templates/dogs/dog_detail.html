@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ dog.dog_name }}</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Breed:</strong> {{ dog.breed }}</p>
+            <p><strong>Age:</strong> {{ dog.age }}</p>
+            <p><strong>Weight:</strong> {{ dog.weight }} lbs</p>
+            <p><strong>Temperament:</strong> {{ dog.temperament }}</p>
+            <p><strong>Energy Level:</strong> {{ dog.energy_level }}</p>
+        </div>
+        {% if dog.photo %}
+        <div class="col-md-6">
+            <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}" class="img-fluid">
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

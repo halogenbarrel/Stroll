@@ -276,7 +276,7 @@ class UserbaseViewsTests(TestCase):
         owner = Owner.objects.create(
             user=user,
             address='123 Original St',
-            phone_number='555-0123'
+            phone_number='402-555-0123'
         )
 
         self.client.login(username='comprehensive_user', password='testpass123')
@@ -291,7 +291,7 @@ class UserbaseViewsTests(TestCase):
         self.assertEqual(form.fields['is_owner'].initial, True)
         self.assertEqual(form.fields['bio'].initial, 'Original bio')
         self.assertEqual(form.fields['address'].initial, '123 Original St')
-        self.assertEqual(form.fields['phone_number'].initial, '555-0123')
+        self.assertEqual(form.fields['phone_number'].initial, '402-555-0123')
         self.assertEqual(form.fields['temperament'].initial, ['FRIENDLY'])
         self.assertEqual(form.fields['energy_level'].initial, ['MEDIUM'])
         self.assertEqual(form.fields['weight_range'].initial, ['21-50'])
@@ -358,7 +358,7 @@ class UserbaseViewsTests(TestCase):
             'energy_level': ['LOW'],
             'weight_range': ['0-20'],
             'address': '456 Final Ave',
-            'phone_number': '555-9876',
+            'phone_number': '402-555-9876',
         }
 
         response = self.client.post(reverse('userbase:edit_profile'), data=form_data)
@@ -377,7 +377,7 @@ class UserbaseViewsTests(TestCase):
         # Verify owner profile was recreated
         owner = user.owner_profile
         self.assertEqual(owner.address, '456 Final Ave')
-        self.assertEqual(owner.phone_number, '555-9876')
+        self.assertEqual(owner.phone_number, '402-555-9876')
 
         # Verify all permissions are present
         for perm in walker_perms:
