@@ -1,30 +1,180 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Edit My Information</h2>
+    <h2>Edit My Profile</h2>
 
-    <!-- only render certain info rather than updating everything like username/password too-->
     <form method="post">
         {% csrf_token %}
-        <div class="mb-3">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-        </div>
-        <div class="mb-3">
-            {{ form.bio.label_tag }}
-            {{ form.bio }}
-        </div>
-        <div class="mb-3">
-            {{ form.address.label_tag }}
-            {{ form.address }}
-        </div>
-        <div class="mb-3">
-            {{ form.phone_number.label_tag }}
-            {{ form.phone_number }}
+
+        <!-- Basic Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Basic Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'userbase:owner_settings' %}" class="btn btn-secondary">Cancel</a>
+        <!-- Role Selection -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">My Roles</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            {{ form.is_walker }}
+                            {{ form.is_walker.label_tag }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            {{ form.is_owner }}
+                            {{ form.is_owner.label_tag }}
+                        </div>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Walker Information -->
+        <div class="card mb-4" id="walker-fields">
+            <div class="card-header">
+                <h5 class="mb-0">Walker Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.bio.label_tag }}
+                    {{ form.bio }}
+                    {% if form.bio.errors %}
+                        <div class="text-danger">{{ form.bio.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Temperament Preferences</label>
+                    {{ form.temperament }}
+                    {% if form.temperament.errors %}
+                        <div class="text-danger">{{ form.temperament.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Energy Level Preferences</label>
+                    {{ form.energy_level }}
+                    {% if form.energy_level.errors %}
+                        <div class="text-danger">{{ form.energy_level.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Weight Range Preferences</label>
+                    {{ form.weight_range }}
+                    {% if form.weight_range.errors %}
+                        <div class="text-danger">{{ form.weight_range.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner Information -->
+        <div class="card mb-4" id="owner-fields">
+            <div class="card-header">
+                <h5 class="mb-0">Owner Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.phone_number.label_tag }}
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        <div class="text-danger">{{ form.phone_number.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden fields to ensure form validation works -->
+        <input type="hidden" name="username" value="{{ user.username }}">
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'userbase:owner_settings' %}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
 </div>
+
+<script>
+// Toggle visibility of role-specific fields based on checkbox state
+document.addEventListener('DOMContentLoaded', function() {
+    const walkerCheckbox = document.querySelector('#id_is_walker');
+    const ownerCheckbox = document.querySelector('#id_is_owner');
+    const walkerFields = document.querySelector('#walker-fields');
+    const ownerFields = document.querySelector('#owner-fields');
+
+    function toggleFields() {
+        if (walkerCheckbox && walkerCheckbox.checked) {
+            walkerFields.style.display = 'block';
+        } else if (walkerCheckbox) {
+            walkerFields.style.display = 'none';
+        }
+
+        if (ownerCheckbox && ownerCheckbox.checked) {
+            ownerFields.style.display = 'block';
+        } else if (ownerCheckbox) {
+            ownerFields.style.display = 'none';
+        }
+    }
+
+    if (walkerCheckbox) walkerCheckbox.addEventListener('change', toggleFields);
+    if (ownerCheckbox) ownerCheckbox.addEventListener('change', toggleFields);
+
+    // Initial check
+    toggleFields();
+});
+</script>
+
+<style>
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.card-header h5 {
+    color: #495057;
+}
+</style>
 {% endblock %}
