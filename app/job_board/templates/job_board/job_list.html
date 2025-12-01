@@ -9,32 +9,39 @@
     {% if jobs %}
       <ul class="list-group mt-3">
         {% for job in jobs %}
-          <li class="list-group-item">
-            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
-            <br>
-            {% if job.location %}
-              Location: {{ job.location }}
-            {% endif %}
-            <br>
-            {% if job.description  %}
-              Description : {{ job.description  }}
-            {% endif %}
-            <br>
-	    Status: {{ job.status }} {% if job.status == "ASSIGNED" %} to {{ job.walker.user.username }} {% endif %}
-	    <!-- Add at the end of this line the user that has accepted it -->
-            {% if job.status == "WAITING FOR APPROVAL" %}
-              <br>Assigned Walker: {{ job.walker.user.username }}
-              <!-- Button to let owner confirm and assign walker to job -->
-              <form method="post" action="{% url 'job_board:confirm_walker' job.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-sm mt-2">Confirm Walker</button>
-              </form>
-              <!-- Button to let owner decline the walker -->
-              <form method="post" action="{% url 'job_board:decline_job' job.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm mt-2">Decline Walker</button>
-              </form>
-            {% endif %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+              <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
+              <br>
+              {% if job.location %}
+                Location: {{ job.location }}
+              {% endif %}
+              <br>
+              {% if job.description  %}
+                Description : {{ job.description  }}
+              {% endif %}
+              <br>
+	      Status: {{ job.status }} {% if job.status == "ASSIGNED" %} to {{ job.walker.user.username }} {% endif %}
+	      <!-- Add at the end of this line the user that has accepted it -->
+              {% if job.status == "WAITING FOR APPROVAL" %}
+                <br>Assigned Walker: {{ job.walker.user.username }}
+                <!-- Button to let owner confirm and assign walker to job -->
+                <form method="post" action="{% url 'job_board:confirm_walker' job.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm mt-2">Confirm Walker</button>
+                </form>
+                <!-- Button to let owner decline the walker -->
+                <form method="post" action="{% url 'job_board:decline_job' job.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm mt-2">Decline Walker</button>
+                </form>
+              {% endif %}
+            </div>
+            <div class="mr-3">
+              <!-- Delete button for job owner -->
+              <a href="{% url 'job_board:job_delete' job.id %}"
+                 class="btn btn-outline-danger btn-sm">Delete Job</a>
+            </div>
           </li>
         {% endfor %}
       </ul>

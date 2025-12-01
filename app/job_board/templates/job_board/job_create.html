@@ -1,10 +1,47 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>Create a New Job Posting</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Post Job</button>
-  </form>
+<div class="container mt-4">
+    <h2>Create a New Job Posting</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Job Details</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Post Job</button>
+                    <a href="{% url 'job_board:job_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-group p {
+    text-align: justify;
+}
+
+.card-body .form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.card-body input,
+.card-body select,
+.card-body textarea {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.card-body textarea {
+    min-height: 100px;
+}
+</style>
 {% endblock %}
