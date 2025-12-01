@@ -66,32 +66,40 @@ def job_list(request):
         assigned_jobs = Job.objects.filter(walker=walker, status="ASSIGNED").order_by(
             "scheduled_date", "scheduled_time"
         )
-        available_jobs = (
-            Job.objects.filter(
+        # Check if filtering is disabled via URL parameter
+        # Default: filtering enabled, ?filtering=disabled: filtering disabled
+        filtering_disabled = request.GET.get('filtering') == 'disabled'
+
+        if filtering_disabled:
+            # Show all open jobs when filtering is disabled
+            available_jobs = Job.objects.filter(
                 status="OPEN",
-                dog__temperament__in=walker.temperament,
-                dog__energy_level__in=walker.energy_level,
-                dog__weight__gte=min_weight,
-                dog__weight__lte=max_weight,
+                walker__isnull=True,
+            ).order_by("created_at")
+        else:
+            # Show preference-matched jobs when filtering is enabled
+            available_jobs = (
+                Job.objects.filter(
+                    status="OPEN",
+                    dog__temperament__in=walker.temperament,
+                    dog__energy_level__in=walker.energy_level,
+                    dog__weight__gte=min_weight,
+                    dog__weight__lte=max_weight,
+                )
+                .exclude(walker__isnull=False)
+                .order_by("created_at")
             )
-            .exclude(walker__isnull=False)
-            .order_by("created_at")
-        )
-        
+
         pending_jobs = Job.objects.filter(
             walker=walker,
             status="WAITING FOR APPROVAL"
         ).order_by("created_at")
 
-        all_available_jobs = Job.objects.filter(
-                status="OPEN",
-                walker__isnull=True,
-            ).order_by("created_at")
-
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
-        context["available_jobs"] = all_available_jobs
+        context["available_jobs"] = available_jobs
         context["pending_jobs"] = pending_jobs
+        context["filtering_disabled"] = filtering_disabled
 
     return render(request, "job_board/job_list.html", context)
 

@@ -94,7 +94,21 @@
     {% endif %}
       
 
-    <h3>Available Jobs</h3>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h3 class="mb-0">Available Jobs</h3>
+      {% if filtering_disabled %}
+        <a href="{% url 'job_board:job_list' %}" class="btn btn-outline-primary btn-sm">Enable Filtering</a>
+      {% else %}
+        <a href="{% url 'job_board:job_list' %}?filtering=disabled" class="btn btn-outline-warning btn-sm">Disable Filtering</a>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      {% if filtering_disabled %}
+        <small class="text-muted">Filtering disabled - showing all available jobs</small>
+      {% else %}
+        <small class="text-muted">Showing jobs that match your preferences</small>
+      {% endif %}
+    </div>
     {% if available_jobs %}
       <ul class="list-group">
         {% for job in available_jobs %}
