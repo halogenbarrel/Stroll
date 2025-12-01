@@ -60,38 +60,67 @@ class JobBoardViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['role'], 'walker')
 
-    def test_job_detail(self):
-        """Test job detail view works."""
+    def test_job_detail_owner_access(self):
+        """Test owner can access their job details."""
+        self.client.login(username='testowner', password='testpass')
         response = self.client.get(reverse('job_board:job_detail', args=[self.job.pk]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['job'], self.job)
 
+    def test_job_detail_walker_access_open_job(self):
+        """Test walker can access open job details."""
+        self.client.login(username='testwalker', password='testpass')
+        response = self.client.get(reverse('job_board:job_detail', args=[self.job.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['job'], self.job)
+
+    def test_job_detail_unauthorized_access(self):
+        """Test unauthorized users cannot access job details."""
+        # Create a different owner and job
+        other_owner_user = User.objects.create_user(
+            username='otherowner', email='other@test.com', password='testpass'
+        )
+        other_owner = Owner.objects.create(
+            user=other_owner_user, address='456 Other St', phone_number='402-555-9999'
+        )
+        other_job = Job.objects.create(
+            title='Other Job', description='Other description',
+            owner=other_owner, dog=self.dog, status='OPEN'
+        )
+
+        # Try to access other owner's job
+        self.client.login(username='testowner', password='testpass')
+        response = self.client.get(reverse('job_board:job_detail', args=[other_job.pk]))
+        self.assertEqual(response.status_code, 302)  # Should redirect to job list
+
     def test_job_create_get(self):
-        """Test job create form displays."""
+        """Test job create form displays for authenticated users."""
+        self.client.login(username='testowner', password='testpass')
         response = self.client.get(reverse('job_board:job_create'))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.context['form'], JobForm)
 
     def test_job_create_post_valid(self):
         """Test creating a job with valid data."""
+        self.client.login(username='testowner', password='testpass')
         data = {
             'title': 'New Job',
             'description': 'New job description',
-            'owner': self.owner.pk,
             'dog': self.dog.pk,
             'location': 'Test Park',
             'scheduled_date': '2024-01-01',
             'scheduled_time': '10:00',
             'recurrence': 'NONE',
-            'duration': 60,
-            'price': 30.0,
+            'duration': '60',
         }
         response = self.client.post(reverse('job_board:job_create'), data=data)
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Job.objects.filter(title='New Job').exists())
+        job = Job.objects.get(title='New Job')
+        self.assertEqual(job.owner, self.owner)  # Owner should be set automatically
 
     def test_job_create_post_invalid(self):
         """Test creating a job with invalid data."""
+        self.client.login(username='testowner', password='testpass')
         data = {'title': '', 'description': 'Test'}
         response = self.client.post(reverse('job_board:job_create'), data=data)
         self.assertEqual(response.status_code, 200)
@@ -122,3 +151,37 @@ class JobBoardViewsTests(TestCase):
         self.job.refresh_from_db()
         self.assertEqual(self.job.status, 'OPEN')
         self.assertIsNone(self.job.walker)
+
+    def test_job_delete_get_shows_confirmation(self):
+        """Test job delete GET shows confirmation page."""
+        self.client.login(username='testowner', password='testpass')
+        response = self.client.get(reverse('job_board:job_delete', args=[self.job.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['job'], self.job)
+
+    def test_job_delete_owner_access(self):
+        """Test owner can delete their job."""
+        self.client.login(username='testowner', password='testpass')
+        response = self.client.post(reverse('job_board:job_delete', args=[self.job.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Job.objects.filter(pk=self.job.pk).exists())
+
+    def test_job_delete_unauthorized_access(self):
+        """Test unauthorized users cannot delete jobs."""
+        # Create a different owner and job
+        other_owner_user = User.objects.create_user(
+            username='otherowner', email='other@test.com', password='testpass'
+        )
+        other_owner = Owner.objects.create(
+            user=other_owner_user, address='456 Other St', phone_number='402-555-9999'
+        )
+        other_job = Job.objects.create(
+            title='Other Job', description='Other description',
+            owner=other_owner, dog=self.dog, status='OPEN'
+        )
+
+        # Try to delete other owner's job
+        self.client.login(username='testowner', password='testpass')
+        response = self.client.post(reverse('job_board:job_delete', args=[other_job.pk]))
+        self.assertEqual(response.status_code, 302)  # Should redirect to job list
+        self.assertTrue(Job.objects.filter(pk=other_job.pk).exists())  # Job should still exist

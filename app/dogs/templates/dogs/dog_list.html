@@ -9,80 +9,61 @@
   }
 
   .dog-card {
-    position: relative;
     width: 200px;
     height: 250px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
     text-align: center;
   }
-
   .dog-card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
   }
 
-  .dog-card h3 {
-    margin: 8px 0;
-  }
-
-  .dog-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+  .header-container {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    justify-content: space-between;
+    margin-bottom: 20px;
   }
 
-  .dog-card:hover .dog-card-overlay {
-    opacity: 1;
+  .header-container h2 {
+    margin: 0;
   }
-
-  .overlay-btn {
-    padding: 8px 14px;
-    margin: 6px 0;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-  }
-
-  .edit-btn { background: #4caf50; }
-  .delete-btn { background: #e53935; }
 </style>
 
-<div class="header-container" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+<div class="header-container">
   <h2>My Dogs</h2>
-  <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
+  {% if not error_message %}
+    <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
+  {% endif %}
 </div>
 
-{% if dogs %}
-  <div class="dog-grid">
-    {% for dog in dogs %}
-      <div class="dog-card">
-        <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
-        <h3>{{ dog.dog_name }}</h3>
-
-        <div class="dog-card-overlay">
-          <a href="{% url 'edit_dog' dog.id %}" class="overlay-btn edit-btn">Edit</a>
-
-          <form method="POST" action="{% url 'delete_dog' dog.id %}">
-            {% csrf_token %}
-            <button type="submit" class="overlay-btn delete-btn">Delete</button>
-          </form>
-        </div>
-
-      </div>
-    {% endfor %}
+{% if error_message %}
+  <div class="alert alert-warning">
+    {{ error_message }}
   </div>
 {% else %}
-  <p>You haven't added any dogs yet.</p>
-{% endif %}
+  {% if dogs %}
+    <div class="dog-grid">
+      {% for dog in dogs %}
+        <div class="dog-card">
+          <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
+          <h3>{{ dog.dog_name }}</h3>
 
+          <div class="dog-card-overlay">
+            <a href="{% url 'edit_dog' dog.id %}" class="overlay-btn edit-btn">Edit</a>
+
+            <form method="POST" action="{% url 'delete_dog' dog.id %}">
+              {% csrf_token %}
+              <button type="submit" class="overlay-btn delete-btn">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You haven't added any dogs yet.</p>
+      {% endfor %}
+  {% endif %}
+{% endif %}
 {% endblock %}
