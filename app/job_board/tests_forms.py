@@ -31,14 +31,12 @@ class JobBoardFormsTests(TestCase):
         form_data = {
             'title': 'Test Job',
             'description': 'Test job description',
-            'owner': self.owner.pk,
             'dog': self.dog.pk,
-            'location': 'Test Park',
             'scheduled_date': '2024-01-01',
             'scheduled_time': '10:00',
+            'duration': '60',
+            'location': 'Test Park',
             'recurrence': 'NONE',
-            'duration': 60,
-            'price': 30.0,
         }
         form = JobForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -54,17 +52,43 @@ class JobBoardFormsTests(TestCase):
         form_data = {
             'title': 'Test Job',
             'description': 'Test description',
-            'owner': self.owner.pk,
             'dog': self.dog.pk,
-            'location': 'Test Park',
             'scheduled_date': '2024-01-01',
             'scheduled_time': '10:00',
+            'duration': '60',
+            'location': 'Test Park',
             'recurrence': 'NONE',
-            'duration': 60,
-            'price': 30.0,
         }
         form = JobForm(data=form_data)
         self.assertTrue(form.is_valid())
-        job = form.save()
+        # Set owner before saving since it's required by the model
+        job = form.save(commit=False)
+        job.owner = self.owner
+        job.save()
         self.assertEqual(job.title, 'Test Job')
+        self.assertEqual(job.dog, self.dog)
         self.assertEqual(job.owner, self.owner)
+
+    def test_job_form_user_filtering(self):
+        """Test JobForm filters dog queryset based on user."""
+        # Create another owner and dog
+        other_owner_user = User.objects.create_user(
+            username='otherowner', email='other@test.com', password='testpass'
+        )
+        other_owner = Owner.objects.create(
+            user=other_owner_user, address='456 Other St', phone_number='402-555-5678'
+        )
+        other_dog = Doggy.objects.create(
+            dog_name='OtherDog', breed='Labrador', temperament='FRIENDLY',
+            energy_level='HIGH', weight=30.0, age=2, owner=other_owner
+        )
+
+        # Form without user should include all dogs
+        form_all = JobForm()
+        self.assertIn(self.dog, form_all.fields['dog'].queryset)
+        self.assertIn(other_dog, form_all.fields['dog'].queryset)
+
+        # Form with owner user should only show their dogs
+        form_filtered = JobForm(user=self.owner_user)
+        self.assertIn(self.dog, form_filtered.fields['dog'].queryset)
+        self.assertNotIn(other_dog, form_filtered.fields['dog'].queryset)
