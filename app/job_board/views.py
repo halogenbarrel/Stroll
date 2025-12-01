@@ -43,7 +43,7 @@ def job_list(request):
             max_weight = 300
 
         # Walker: show assigned + matching open jobs
-        assigned_jobs = Job.objects.filter(walker=walker).order_by(
+        assigned_jobs = Job.objects.filter(walker=walker, status="ASSIGNED").order_by(
             "scheduled_date", "scheduled_time"
         )
         available_jobs = (
@@ -57,23 +57,53 @@ def job_list(request):
             .exclude(walker__isnull=False)
             .order_by("created_at")
         )
+        
+        pending_jobs = Job.objects.filter(
+            walker=walker,
+            status="WAITING FOR APPROVAL"
+        ).order_by("created_at")
+
+        all_available_jobs = Job.objects.filter(
+                status="OPEN",
+                walker__isnull=True,
+            ).order_by("created_at")
 
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
-        context["available_jobs"] = available_jobs
+        context["available_jobs"] = all_available_jobs
+        context["pending_jobs"] = pending_jobs
 
     return render(request, "job_board/job_list.html", context)
+
+def confirm_walker(request, job_id):
+    job = get_object_or_404(Job, id=job_id, status="WAITING FOR APPROVAL")
+    job.status = "ASSIGNED"
+    job.scheduled_date = timezone.now().date()
+    job.scheduled_time = timezone.now().time()
+    job.save()
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 
 @login_required
 def accept_job(request, job_id):
     job = get_object_or_404(Job, id=job_id, status="OPEN")
-    job.status = "ASSIGNED"
+    job.status = "WAITING FOR APPROVAL"
     job.walker = request.user.walker_profile
     job.scheduled_date = timezone.now().date()
     job.scheduled_time = timezone.now().time()
     job.save()
-    return redirect("job_list")
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
+
+@login_required
+def decline_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == "POST":
+        job.walker = None
+        job.status = "OPEN"
+        job.save()
+
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 
 def job_create(request):
@@ -88,3 +118,6 @@ def job_create(request):
     else:
         form = JobForm()
     return render(request, "job_board/job_create.html", {"form": form})
+
+
+
