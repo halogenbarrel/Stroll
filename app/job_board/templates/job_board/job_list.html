@@ -20,9 +20,10 @@
               Description : {{ job.description  }}
             {% endif %}
             <br>
-            Status: {{ job.status }}
+	    Status: {{ job.status }} {% if job.status == "ASSIGNED" %} to {{ job.walker.user.username }} {% endif %}
+	    <!-- Add at the end of this line the user that has accepted it -->
             {% if job.status == "WAITING FOR APPROVAL" %}
-              <br>Assigned Walker: {{ job.walker.user.get_full_name }}
+              <br>Assigned Walker: {{ job.walker.user.username }}
               <!-- Button to let owner confirm and assign walker to job -->
               <form method="post" action="{% url 'job_board:confirm_walker' job.id %}">
                 {% csrf_token %}
@@ -55,7 +56,12 @@
 
 	    <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
             Scheduled: {{ job.scheduled_date }} at {{ job.scheduled_time }}<br>
-            Location: {{ job.location }}
+	    Location: {{ job.location }} <br>
+	    
+	    <strong>Contact Information</strong> <br>
+	    <!-- need to pull the name from the user associated with the job --> 
+	    Name: {{ job.owner.user.username }}<br> 
+	    Phone Number: {{ job.owner.phone_number }}<br>
 
 	  </div>
   </li>

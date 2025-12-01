@@ -1,6 +1,11 @@
 [ ] - Update (Login, Signup, Job Creation, Job Viewing) styles
+<<<<<<< HEAD
 [ ] - Testing [[x] userbase], [[x] dogs], [[x] jobs], [[ ] selenium]
 [ ] - Form contact between Walker & Owner after mutual job acceptance
+=======
+[ ] - Testing [[x] userbase], [[ ] dogs], [[ ] jobs]
+[x] - Form contact between Walker & Owner after mutual job acceptance
+>>>>>>> 855e5f452c3218b3a5326b50b1ee8ceffb76cc71
 [ ] - Add filtering to the job list page
     1. [ ] - Add toggle for Walker preferences
     2. [ ] - User defined filtering options - note no search bar needed
