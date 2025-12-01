@@ -99,38 +99,20 @@
 <div class="dashboard-container">
     <h1 class="welcome-text">Welcome to Stroll</h1>
 
-    {% if user.is_authenticated %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        
+
 
         <!--Want all accounts to be able to view dogs-->
         <div class="col">
-        <a href="{% url 'dog_list' %}" class="card-link">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">All Dogs</h2>
-                </div>
-            
-            </div>
-        </a>
-        </div>
-    
-        
-        <!--Only owners can create dog profiles-->
-        {% if user.owner_profile %}
-        
-        <div class="col">
-            <a href="{% url 'create_dog' %}" class="card-link">
+            <a href="{% url 'dog_list' %}" class="card-link">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h2 class="card-title">Create Dog Profile</h2>
+                        <h2 class="card-title">All Dogs</h2>
                     </div>
                 </div>
             </a>
         </div>
-        {% endif %}
 
-        {% if user.walker_profile %}
         <div class="col">
             <a href="{% url 'job_board:job_list' %}" class="card-link">
                 <div class="card h-100">
@@ -140,7 +122,6 @@
                 </div>
             </a>
         </div>
-        {% endif %}
 
         {% if user.is_staff %}
         <div class="col">
@@ -155,15 +136,4 @@
         {% endif %}
     </div>
 </div>
-{% else %}
-<div class="col">
-            <a href="{% url 'login' %}" class="card-link">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Login</h2>
-                    </div>
-                </div>
-            </a>
-        </div>
-{% endif %}
 {% endblock %}
