@@ -1,15 +1,24 @@
-<div class="login-container">
-    <h2>Login to Stroll</h2>
+{% extends "base.html" %}
 
-    <form method="post" class="login-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-</div>
-
+{% block extra_css %}
 <style>
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: white;
+    }
+
+    input {
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    label {
+        color: white;
+    }
+
     .login-container {
+        background-color: var(--miasma-charcoal);
         max-width: 400px;
         margin: 2rem auto;
         padding: 2rem;
@@ -35,7 +44,7 @@
     }
 
     .btn-primary {
-        background-color: #007bff;
+        background-color: var(--miasma-eucalyptus);
         color: white;
         border: none;
         padding: 0.5rem 1rem;
@@ -43,3 +52,18 @@
         cursor: pointer;
     }
 </style>
+{% endblock %}
+
+{% block content %}
+
+<div class="login-container">
+    <h2>Login to Stroll</h2>
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+{% endblock %}

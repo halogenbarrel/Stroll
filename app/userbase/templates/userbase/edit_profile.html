@@ -1,30 +1,318 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Edit My Information</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+            <h2>Edit My Profile</h2>
 
-    <!-- only render certain info rather than updating everything like username/password too-->
     <form method="post">
         {% csrf_token %}
-        <div class="mb-3">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-        </div>
-        <div class="mb-3">
-            {{ form.bio.label_tag }}
-            {{ form.bio }}
-        </div>
-        <div class="mb-3">
-            {{ form.address.label_tag }}
-            {{ form.address }}
-        </div>
-        <div class="mb-3">
-            {{ form.phone_number.label_tag }}
-            {{ form.phone_number }}
+
+        <!-- Basic Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Basic Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'userbase:owner_settings' %}" class="btn btn-secondary">Cancel</a>
+        <!-- Role Selection -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">My Roles</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            {{ form.is_walker }}
+                            {{ form.is_walker.label_tag }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            {{ form.is_owner }}
+                            {{ form.is_owner.label_tag }}
+                        </div>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Walker Information -->
+        <div class="card mb-4" id="walker-fields">
+            <div class="card-header">
+                <h5 class="mb-0">Walker Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.bio.label_tag }}
+                    {{ form.bio }}
+                    {% if form.bio.errors %}
+                        <div class="text-danger">{{ form.bio.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Temperament Preferences</label>
+                    {{ form.temperament }}
+                    {% if form.temperament.errors %}
+                        <div class="text-danger">{{ form.temperament.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Energy Level Preferences</label>
+                    {{ form.energy_level }}
+                    {% if form.energy_level.errors %}
+                        <div class="text-danger">{{ form.energy_level.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Weight Range Preferences</label>
+                    {{ form.weight_range }}
+                    {% if form.weight_range.errors %}
+                        <div class="text-danger">{{ form.weight_range.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner Information -->
+        <div class="card mb-4" id="owner-fields">
+            <div class="card-header">
+                <h5 class="mb-0">Owner Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.phone_number.label_tag }}
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        <div class="text-danger">{{ form.phone_number.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden fields to ensure form validation works -->
+        <input type="hidden" name="username" value="{{ user.username }}">
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'userbase:owner_settings' %}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const walkerCheckbox = document.querySelector('#id_is_walker');
+    const ownerCheckbox = document.querySelector('#id_is_owner');
+    const walkerFields = document.querySelector('#walker-fields');
+    const ownerFields = document.querySelector('#owner-fields');
+
+    function toggleFields() {
+        if (walkerCheckbox) {
+            if (walkerCheckbox.checked) {
+                walkerFields.classList.add('show');
+            } else {
+                walkerFields.classList.remove('show');
+            }
+        }
+
+        if (ownerCheckbox) {
+            if (ownerCheckbox.checked) {
+                ownerFields.classList.add('show');
+            } else {
+                ownerFields.classList.remove('show');
+            }
+        }
+    }
+
+    // Add dynamic slide-down transition styles
+    const style = document.createElement('style');
+    style.textContent = `
+        #walker-fields, #owner-fields {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            pointer-events: none;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #walker-fields.show, #owner-fields.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            max-height: 1000px;
+        }
+    `;
+    document.head.appendChild(style);
+
+    if (walkerCheckbox) walkerCheckbox.addEventListener('change', toggleFields);
+    if (ownerCheckbox) ownerCheckbox.addEventListener('change', toggleFields);
+
+    // Initial check
+    toggleFields();
+});
+</script>
+
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+    }
+
+    .card-header h5 {
+        color: var(--miasma-reseda);
+        margin: 0;
+    }
+
+    .form-label {
+        color: var(--miasma-light-gray);
+        font-weight: 500;
+    }
+
+    .card-body input {
+        border: 1px solid var(--miasma-graphite);
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
+        border-radius: 0.25rem;
+    }
+    .card-body select,
+    .card-body textarea {
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--miasma-graphite);
+        border-radius: 0.25rem;
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+    .card-body select,
+    .card-body textarea {
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--miasma-graphite);
+        border-radius: 0.25rem;
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .card-body input:focus,
+    .card-body select:focus,
+    .card-body textarea:focus {
+        border-color: var(--miasma-tangerine);
+        box-shadow: 0 0 0 0.2rem rgba(253, 151, 32, 0.25);
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .form-check-input {
+        margin-right: 0.5rem;
+    }
+    h2 {
+        color: var(--miasma-marble);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+    }
+
+    .form-check-label {
+        color: var(--miasma-light-gray);
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-copper);
+        border-color: var(--miasma-copper);
+    }
+
+    .btn-secondary {
+        background-color: var(--miasma-graphite);
+        border-color: var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--miasma-dark-gray);
+        border-color: var(--miasma-dark-gray);
+    }
+
+    .text-danger {
+        color: var(--miasma-terracota);
+    }
+
+    /* Limit bio and address field heights to 3 lines */
+    .card-body textarea[id*="bio"] {
+        min-height: 3rem;
+        max-height: 3rem;
+        resize: vertical;
+        overflow-y: auto;
+    }
+
+    /* Target address field specifically */
+    .card[id*="owner"] .card-body input[type="text"],
+    .card[id*="owner"] .card-body textarea {
+        min-height: 3rem;
+        max-height: 3rem;
+        resize: vertical;
+        overflow-y: auto;
+    }
+</style>
 {% endblock %}

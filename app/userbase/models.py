@@ -19,11 +19,6 @@ class Walker(models.Model):
 
     bio = models.TextField(blank=True, null=True)
 
-    # switching model to OneToOneField so users can only have one walker profile
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="walker_profile"
-    )
-
     temperament = models.JSONField(default=list, blank=True)
     energy_level = models.JSONField(default=list, blank=True)
     weight_range = models.JSONField(default=list, blank=True)
@@ -139,6 +134,8 @@ class Job(models.Model):
     description = models.TextField()
 
     # Relationships
+    
+    #if the decline button is pressed, need all users to be able to see this job, not just the one who it was posted for
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     dog = models.ForeignKey(Doggy, on_delete=models.CASCADE)
     walker = models.ForeignKey(Walker, on_delete=models.SET_NULL, null=True, blank=True)
@@ -176,6 +173,7 @@ class Job(models.Model):
             ("ASSIGNED", "Assigned"),
             ("COMPLETED", "Completed"),
             ("CANCELLED", "Cancelled"),
+            ("WAITING FOR APPROVAL", "Waiting for Approval"),
         ],
         default="OPEN",
     )

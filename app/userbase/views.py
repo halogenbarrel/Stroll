@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
 from userbase.models import Doggy, Walker, Owner
 from django.db.models import Count
-from .forms import StrollUserCreationForm
+from .forms import StrollUserCreationForm, UserProfileForm
 from django.contrib.auth.models import Permission
 
 
@@ -19,8 +19,9 @@ def register(request):
                 Walker.objects.create(
                     user=user,
                     bio=form.cleaned_data["bio"],
-                    temperament=form.data["temperament"],
-                    energy_level=form.data["energy_level"],
+                    temperament=form.cleaned_data["temperament"],
+                    energy_level=form.cleaned_data["energy_level"],
+                    weight_range=form.cleaned_data["weight_range"],
                 )
 
                 perms = Permission.objects.filter(
@@ -51,7 +52,7 @@ def register(request):
             login(request, user)
             return redirect("/")
         else:
-            print("FORM ERRORS:", form.errors)
+            pass  # Form validation errors are handled in template
     else:
         form = StrollUserCreationForm()
 
@@ -71,11 +72,11 @@ def edit_profile(request):
     user = request.user
 
     if request.method == "POST":
-        form = StrollUserCreationForm(request.POST, instance=user)
+        form = UserProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect("userbase/owner_settings.html")
+            return redirect("userbase:owner_settings")
     else:
-        form = StrollUserCreationForm(instance=user)
+        form = UserProfileForm(instance=user)
 
     return render(request, "userbase/edit_profile.html", {"form": form})

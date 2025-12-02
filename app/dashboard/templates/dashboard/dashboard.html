@@ -5,10 +5,7 @@
     /* Custom card styling that builds on Bootstrap */
     .card {
         border: none;
-        background: rgba(114, 161, 231, 0.4);
-        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.1),
-            -4px -4px 15px rgba(255, 255, 255, 0.8),
-            inset 2px 2px 5px rgba(255, 255, 255, 0.1);
+        background: var(--miasma-river);
         transition: all 0.3s ease;
         border-radius: 15px;
         display: flex;
@@ -26,10 +23,7 @@
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.15),
-            -6px -6px 20px rgba(255, 255, 255, 0.9),
-            inset 2px 2px 5px rgba(255, 255, 255, 0.2);
-        background: rgba(114, 161, 231, 1);
+        background: var(--miasma-river-alpha);
         cursor: pointer;
     }
 
@@ -38,7 +32,7 @@
     }
 
     .card-title {
-        color: #2c3e50;
+        color: var(--miasma-sky);
         font-size: 1.5rem;
         margin-bottom: 1.5rem;
         text-align: center;
@@ -61,7 +55,7 @@
 
     /* Custom welcome text styling */
     .welcome-text {
-        color: #2c3e50;
+        color: var(--miasma-marble);
         font-size: 2.5rem;
         font-weight: 600;
         margin-bottom: 2rem;
@@ -99,38 +93,20 @@
 <div class="dashboard-container">
     <h1 class="welcome-text">Welcome to Stroll</h1>
 
-    {% if user.is_authenticated %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        
+
 
         <!--Want all accounts to be able to view dogs-->
         <div class="col">
-        <a href="{% url 'dog_list' %}" class="card-link">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">All Dogs</h2>
-                </div>
-            
-            </div>
-        </a>
-        </div>
-    
-        
-        <!--Only owners can create dog profiles-->
-        {% if user.owner_profile %}
-        
-        <div class="col">
-            <a href="{% url 'create_dog' %}" class="card-link">
+            <a href="{% url 'dog_list' %}" class="card-link">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h2 class="card-title">Create Dog Profile</h2>
+                        <h2 class="card-title">All Dogs</h2>
                     </div>
                 </div>
             </a>
         </div>
-        {% endif %}
 
-        {% if user.walker_profile %}
         <div class="col">
             <a href="{% url 'job_board:job_list' %}" class="card-link">
                 <div class="card h-100">
@@ -140,7 +116,6 @@
                 </div>
             </a>
         </div>
-        {% endif %}
 
         {% if user.is_staff %}
         <div class="col">
@@ -155,15 +130,4 @@
         {% endif %}
     </div>
 </div>
-{% else %}
-<div class="col">
-            <a href="{% url 'login' %}" class="card-link">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Login</h2>
-                    </div>
-                </div>
-            </a>
-        </div>
-{% endif %}
 {% endblock %}

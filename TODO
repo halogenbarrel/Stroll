@@ -1,0 +1,9 @@
+[ ] - Update (Login, Signup, Job Creation, Job Viewing) styles
+[ ] - Testing [[x] userbase], [[x] dogs], [[x] jobs], [[ ] selenium]
+[x] - Form contact between Walker & Owner after mutual job acceptance
+[ ] - Add filtering to the job list page
+    1. [ ] - Add toggle for Walker preferences
+    2. [ ] - User defined filtering options - note no search bar needed
+[x] - User editing
+[x] - Fix multiple choice field handling in registration view (temperament/energy_level only store last selected value)
+[x] - Fix edit_profile view redirect to use URL name instead of template path

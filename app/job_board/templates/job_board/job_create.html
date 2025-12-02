@@ -1,10 +1,112 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>Create a New Job Posting</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Post Job</button>
-  </form>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+            <h2>Create a New Job Posting</h2>
+
+            <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Job Details</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Post Job</button>
+                    <a href="{% url 'job_board:job_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+    }
+
+    .card-header h5 {
+        color: var(--miasma-reseda);
+        margin: 0;
+    }
+
+    h2 {
+        color: var(--miasma-marble);
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group p {
+        text-align: justify;
+        color: var(--miasma-light-gray);
+    }
+
+    .card-body .form-group label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--miasma-light-gray);
+    }
+
+    .card-body input,
+    .card-body select,
+    .card-body textarea {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--miasma-graphite);
+        border-radius: 0.25rem;
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .card-body input:focus,
+    .card-body select:focus {
+        border-color: var(--miasma-obsidian);
+        box-shadow: 0 0 0 0.2rem rgba(156, 156, 156, 0.25);
+    },
+    .card-body textarea:focus {
+        border-color: var(--miasma-obsidian);
+        box-shadow: 0 0 0 0.2rem rgba(156, 156, 156, 0.25);
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .card-body textarea {
+        min-height: 100px;
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-eucalyptus);
+        border-color: var(--miasma-eucalyptus);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-eucalyptus);
+        border-color: var(--miasma-copper);
+    }
+
+    .btn-secondary {
+        background-color: var(--miasma-graphite);
+        border-color: var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--miasma-dark-gray);
+        border-color: var(--miasma-dark-gray);
+    }
+</style>
+{% endblock %}
 {% endblock %}

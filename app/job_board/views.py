@@ -5,11 +5,31 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 
+@login_required
 def job_detail(request, job_id):
     """
-    Display details for a specific job
+    Display details for a specific job - only accessible by job owner or assigned walker
     """
     job = get_object_or_404(Job, id=job_id)
+    user = request.user
+
+    # Check if user has permission to view this job
+    has_permission = False
+
+    if hasattr(user, "owner_profile") and job.owner == user.owner_profile:
+        # User is the job owner
+        has_permission = True
+    elif hasattr(user, "walker_profile") and job.walker == user.walker_profile:
+        # User is the assigned walker
+        has_permission = True
+    elif hasattr(user, "walker_profile") and job.status == "OPEN":
+        # Walker can view open jobs (but not necessarily all details)
+        has_permission = True
+
+    if not has_permission:
+        # User doesn't have permission to view this job
+        return redirect("job_board:job_list")
+
     context = {"job": job}
     return render(request, "job_board/job_detail.html", context)
 
@@ -43,48 +63,110 @@ def job_list(request):
             max_weight = 300
 
         # Walker: show assigned + matching open jobs
-        assigned_jobs = Job.objects.filter(walker=walker).order_by(
+        assigned_jobs = Job.objects.filter(walker=walker, status="ASSIGNED").order_by(
             "scheduled_date", "scheduled_time"
         )
-        available_jobs = (
-            Job.objects.filter(
+        # Check if filtering is disabled via URL parameter
+        # Default: filtering enabled, ?filtering=disabled: filtering disabled
+        filtering_disabled = request.GET.get('filtering') == 'disabled'
+
+        if filtering_disabled:
+            # Show all open jobs when filtering is disabled
+            available_jobs = Job.objects.filter(
                 status="OPEN",
-                dog__temperament__in=walker.temperament,
-                dog__energy_level__in=walker.energy_level,
-                dog__weight__gte=min_weight,
-                dog__weight__lte=max_weight,
+                walker__isnull=True,
+            ).order_by("created_at")
+        else:
+            # Show preference-matched jobs when filtering is enabled
+            available_jobs = (
+                Job.objects.filter(
+                    status="OPEN",
+                    dog__temperament__in=walker.temperament,
+                    dog__energy_level__in=walker.energy_level,
+                    dog__weight__gte=min_weight,
+                    dog__weight__lte=max_weight,
+                )
+                .exclude(walker__isnull=False)
+                .order_by("created_at")
             )
-            .exclude(walker__isnull=False)
-            .order_by("created_at")
-        )
+
+        pending_jobs = Job.objects.filter(
+            walker=walker,
+            status="WAITING FOR APPROVAL"
+        ).order_by("created_at")
 
         context["role"] = "walker"
         context["assigned_jobs"] = assigned_jobs
         context["available_jobs"] = available_jobs
+        context["pending_jobs"] = pending_jobs
+        context["filtering_disabled"] = filtering_disabled
 
     return render(request, "job_board/job_list.html", context)
+
+def confirm_walker(request, job_id):
+    job = get_object_or_404(Job, id=job_id, status="WAITING FOR APPROVAL")
+    job.status = "ASSIGNED"
+    job.scheduled_date = timezone.now().date()
+    job.scheduled_time = timezone.now().time()
+    job.save()
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 
 @login_required
 def accept_job(request, job_id):
     job = get_object_or_404(Job, id=job_id, status="OPEN")
-    job.status = "ASSIGNED"
+    job.status = "WAITING FOR APPROVAL"
     job.walker = request.user.walker_profile
     job.scheduled_date = timezone.now().date()
     job.scheduled_time = timezone.now().time()
     job.save()
-    return redirect("job_list")
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
+
+@login_required
+def decline_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == "POST":
+        job.walker = None
+        job.status = "OPEN"
+        job.save()
+
+    return redirect(request.META.get("HTTP_REFERER", "job_board:job_list.html"))
 
 
+@login_required
+def job_delete(request, job_id):
+    """
+    Delete a job posting - only allowed for the job owner
+    """
+    job = get_object_or_404(Job, id=job_id)
+
+    # Check if the current user is the owner of the job
+    if not hasattr(request.user, 'owner_profile') or job.owner != request.user.owner_profile:
+        return redirect("job_board:job_list")
+
+    if request.method == "POST":
+        job.delete()
+        return redirect("job_board:job_list")
+
+    return render(request, "job_board/job_delete.html", {"job": job})
+
+
+@login_required
 def job_create(request):
     """
     Create a new job posting
     """
     if request.method == "POST":
-        form = JobForm(request.POST)
+        form = JobForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
+            job = form.save(commit=False)
+            job.owner = request.user.owner_profile
+            job.save()
             return redirect("job_board:job_list")
     else:
-        form = JobForm()
+        form = JobForm(user=request.user)
     return render(request, "job_board/job_create.html", {"form": form})
+
+
+

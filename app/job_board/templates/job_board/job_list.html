@@ -1,9 +1,156 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+        color: var(--miasma-lemon);
+    }
+
+    h2, h3 {
+        color: var(--miasma-lemon);
+        margin-bottom: 1rem;
+    }
+
+    .list-group-item {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+        margin-bottom: 0.5rem;
+    }
+
+    .list-group-item-info {
+        background-color: var(--miasma-river);
+        border-color: var(--miasma-sky);
+    }
+
+    .list-group-item-warning {
+        background-color: var(--miasma-walnut);
+        border-color: var(--miasma-ecru);
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-copper);
+        border-color: var(--miasma-copper);
+    }
+
+    .btn-success {
+        background-color: var(--miasma-eucalyptus);
+        border-color: var(--miasma-eucalyptus);
+        color: var(--miasma-obsidian);
+    }
+
+    .btn-success:hover {
+        background-color: var(--miasma-reseda);
+        border-color: var(--miasma-reseda);
+    }
+
+    .btn-danger {
+        background-color: var(--miasma-fire);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+    }
+
+    .btn-danger:hover {
+        background-color: var(--miasma-terracota);
+        border-color: var(--miasma-chestnut);
+    }
+
+    .btn-outline-primary {
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-tangerine);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+    }
+
+    .btn-outline-warning {
+        border-color: var(--miasma-ecru);
+        color: var(--miasma-ecru);
+    }
+
+    .btn-outline-warning:hover {
+        background-color: var(--miasma-ecru);
+        border-color: var(--miasma-ecru);
+        color: var(--miasma-walnut);
+    }
+
+    .btn-outline-danger {
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-terracota);
+    }
+
+    .btn-outline-danger:hover {
+        background-color: var(--miasma-terracota);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+    }
+
+    .text-muted {
+        color: var(--miasma-light-gray) !important;
+    }
+
+    .list-group {
+        background-color: transparent;
+        border: none;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    /* Ensure all text is visible on dark backgrounds */
+    .list-group-item strong,
+    .list-group-item div,
+    .list-group-item p {
+        color: var(--miasma-marble);
+    }
+
+    /* Override any Bootstrap text colors that might cause issues */
+    .list-group-item,
+    .list-group-item * {
+        color: inherit;
+    }
+
+    /* Make sure form text and other elements are visible */
+    small, .small {
+        color: var(--miasma-light-gray);
+    }
+
+    /* Ensure all text in the main content area is visible on dark backgrounds */
+    .container p,
+    .container div:not(.list-group-item),
+    .container span {
+        color: var(--miasma-marble);
+    }
+
+    /* Override any default Bootstrap text colors */
+    .container * {
+        color: inherit;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-
-  <h2>Available Jobs</h2>
-
+<div class="container mt-4">
   <!--button to link to create a job posting only for OWNERS-->
   {% if user.owner_profile %}
     <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
@@ -11,18 +158,39 @@
     {% if jobs %}
       <ul class="list-group mt-3">
         {% for job in jobs %}
-          <li class="list-group-item">
-            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
-            <br>
-            {% if job.location %}
-              Location: {{ job.location }}
-            {% endif %}
-            <br>
-            {% if job.description  %}
-              <em>Description :</em> {{ job.description  }}
-            {% endif %}
-            <br>
-            Status: {{ job.status }}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+              <strong>{{ job.title }}</strong> — {{ job.duration }} minutes
+              <br>
+              {% if job.location %}
+                Location: {{ job.location }}
+              {% endif %}
+              <br>
+              {% if job.description  %}
+                Description : {{ job.description  }}
+              {% endif %}
+              <br>
+	      Status: {{ job.status }} {% if job.status == "ASSIGNED" %} to {{ job.walker.user.username }} {% endif %}
+	      <!-- Add at the end of this line the user that has accepted it -->
+              {% if job.status == "WAITING FOR APPROVAL" %}
+                <br>Assigned Walker: {{ job.walker.user.username }}
+                <!-- Button to let owner confirm and assign walker to job -->
+                <form method="post" action="{% url 'job_board:confirm_walker' job.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm mt-2">Confirm Walker</button>
+                </form>
+                <!-- Button to let owner decline the walker -->
+                <form method="post" action="{% url 'job_board:decline_job' job.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm mt-2">Decline Walker</button>
+                </form>
+              {% endif %}
+            </div>
+            <div class="ml-auto mr-2">
+              <!-- Delete button for job owner -->
+              <a href="{% url 'job_board:job_delete' job.id %}"
+                 class="btn btn-outline-danger btn-sm">Delete Job</a>
+            </div>
           </li>
         {% endfor %}
       </ul>
@@ -37,31 +205,75 @@
     {% if assigned_jobs %}
       <ul class="list-group">
         {% for job in assigned_jobs %}
-          <li class="list-group-item list-group-item-info">
-            <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
+          <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+            
+		<!-- Keep job info here -->
+	  <div>
+
+	    <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
             Scheduled: {{ job.scheduled_date }} at {{ job.scheduled_time }}<br>
-            Location: {{ job.location }}
-          </li>
+	    Location: {{ job.location }} <br>
+	    
+	    <strong>Contact Information</strong> <br>
+	    <!-- need to pull the name from the user associated with the job --> 
+	    Name: {{ job.owner.user.username }}<br> 
+	    Phone Number: {{ job.owner.phone_number }}<br>
+
+	  </div>
+  </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p>No upcoming jobs.</p>
+      <p>No assigned jobs.</p>
     {% endif %}
+	  
+    <h3 class="mt-4">Pending Jobs</h3>
+    {% if pending_jobs %}
+      <ul class="list-group">
+        {% for job in pending_jobs %}
+          <li class="list-group-item list-group-item-warning d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
+              Location: {{ job.location }}
+            </div>
+          {% endfor %}
+      </ul>
+          {% else %}
+      <p>No pending jobs.</p>
+    {% endif %}
+      
 
-    <hr>
-
-    <h3>Available Jobs</h3>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h3 class="mb-0">Available Jobs</h3>
+      {% if filtering_disabled %}
+        <a href="{% url 'job_board:job_list' %}" class="btn btn-outline-primary btn-sm">Enable Filtering</a>
+      {% else %}
+        <a href="{% url 'job_board:job_list' %}?filtering=disabled" class="btn btn-outline-warning btn-sm">Disable Filtering</a>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      {% if filtering_disabled %}
+        <small class="text-muted">Filtering disabled - showing all available jobs</small>
+      {% else %}
+        <small class="text-muted">Showing jobs that match your preferences</small>
+      {% endif %}
+    </div>
     {% if available_jobs %}
       <ul class="list-group">
         {% for job in available_jobs %}
           <li class="list-group-item">
             <strong>{{ job.title }}</strong> — {{ job.duration }} minutes<br>
             {% if job.location %}Location: {{ job.location }}<br>{% endif %}
-            {% if job.description %}<em>Description:</em> {{ job.description }}<br>{% endif %}
+            {% if job.description %}Description: {{ job.description }}<br>{% endif %}
             <form method="post" action="{% url 'job_board:accept_job' job.id %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-success btn-sm mt-2">Accept Job</button>
             </form>
+
+            <form method="POST" action="{% url 'job_board:decline_job' job.id %}">
+			    {% csrf_token %}
+			    <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+		    </form>
           </li>
         {% endfor %}
       </ul>
@@ -69,5 +281,5 @@
       <p>No matching jobs available.</p>
     {% endif %}
   {% endif %}
+</div>
 {% endblock %}
-
