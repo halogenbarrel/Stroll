@@ -53,8 +53,8 @@
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <!-- incase this doesnt work. old code: <span class="nav-link">Welcome, {{ user.username }}!</span>-->
-                        <a href="{% url 'userbase:owner_settings' %}" class="nav-link btn btn-link">Welcome, {{
-                            user.username }}!</a>
+                        <a href="{% url 'userbase:owner_settings' %}" class="nav-link btn btn-link">
+                            <span class="nav-link">Welcome, {{ user.username }}!</span></a>
 
                     </li>
                     <li class="nav-item">
