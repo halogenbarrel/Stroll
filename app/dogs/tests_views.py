@@ -43,16 +43,6 @@ class DogsViewsTests(TestCase):
         response = self.client.get(reverse('dog_list'))
         self.assertEqual(response.status_code, 200)
 
-    def test_dog_detail(self):
-        """Test dog detail view works."""
-        response = self.client.get(reverse('dog_detail', args=[self.dog.pk]))
-        self.assertEqual(response.status_code, 200)
-
-    def test_dog_detail_invalid(self):
-        """Test dog detail with invalid ID."""
-        response = self.client.get(reverse('dog_detail', args=[999]))
-        self.assertEqual(response.status_code, 404)
-
     def test_create_dog_requires_login(self):
         """Test create dog requires authentication."""
         response = self.client.get(reverse('create_dog'))

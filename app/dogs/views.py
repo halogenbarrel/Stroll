@@ -16,11 +16,6 @@ def dog_list(request):
     return render(request, 'dogs/dog_list.html', {'dogs': dogs})
 
 
-@login_required
-def dog_detail(request, dog_id):
-    dog = get_object_or_404(Doggy, id=dog_id)
-    return render(request, 'dogs/dog_detail.html', {'dog': dog})
-
 
 @login_required
 def create_dog(request):
