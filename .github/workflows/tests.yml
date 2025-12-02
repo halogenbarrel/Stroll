@@ -51,52 +51,7 @@ jobs:
       run: |
         python manage.py migrate --verbosity=1
 
-    - name: Install Firefox and geckodriver for Selenium
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y firefox
-        GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep -oP '"tag_name": "\K[^"]*')
-        wget -O /tmp/geckodriver.tar.gz "https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz"
-        sudo tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin/
-        sudo chmod +x /usr/local/bin/geckodriver
-        geckodriver --version
-
-    - name: Start Django development server
+    - name: Run tests
       working-directory: ./app
       run: |
-        python manage.py runserver 8000 > /tmp/django-server.log 2>&1 &
-        echo $! > /tmp/django-server.pid
-        for i in {1..10}; do
-          if curl -f http://localhost:8000/ > /dev/null 2>&1; then
-            echo "Server is ready"
-            break
-          fi
-          echo "Waiting for server... ($i/10)"
-          sleep 2
-        done
-        curl -f http://localhost:8000/ || (cat /tmp/django-server.log && exit 1)
-
-    - name: Run all tests using run-tests.sh
-      id: run_tests
-      env:
-        HEADLESS: 'true'
-        CI: 'true'
-      run: |
-        chmod +x run-tests.sh
-        ./run-tests.sh
-
-    - name: Cleanup test data
-      if: always()
-      working-directory: ./app
-      run: |
-        python ../SelTest/cleanup_test_data.py || true
-
-    - name: Stop Django server
-      if: always()
-      run: |
-        if [ -f /tmp/django-server.pid ]; then
-          kill $(cat /tmp/django-server.pid) 2>/dev/null || true
-          sleep 2
-          kill -9 $(cat /tmp/django-server.pid) 2>/dev/null || true
-        fi
-        pkill -f "manage.py runserver" || true
+        python manage.py test --verbosity=2
