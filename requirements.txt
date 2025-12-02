@@ -28,3 +28,5 @@ typing_extensions==4.15.0
 tzdata==2025.2
 urllib3==2.5.0
 virtualenv==20.35.3
+selenium==4.27.1
+pytest==8.3.4
