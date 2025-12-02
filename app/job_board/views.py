@@ -5,6 +5,34 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 
+def validate_weight_range(weight_range):
+    """
+    Validate weight range as a list of two float numbers [min_weight, max_weight].
+    Returns validated min_weight and max_weight, or defaults (0.0, 300.0) if invalid.
+    """
+    try:
+        # Check if weight_range is a list with exactly 2 elements
+        if not isinstance(weight_range, list) or len(weight_range) != 2:
+            raise ValueError("Weight range must be a list with exactly 2 elements")
+
+        # Convert to float numbers
+        min_weight = float(weight_range[0])
+        max_weight = float(weight_range[1])
+
+        # Validate bounds: min should be <= max, and both should be non-negative
+        if min_weight < 0 or max_weight < 0:
+            raise ValueError("Weight values cannot be negative")
+
+        if min_weight > max_weight:
+            raise ValueError("Minimum weight cannot be greater than maximum weight")
+
+        return min_weight, max_weight
+
+    except (ValueError, TypeError, IndexError):
+        # Return sensible defaults if validation fails
+        return 0.0, 300.0
+
+
 @login_required
 def job_detail(request, job_id):
     """
