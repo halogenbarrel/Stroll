@@ -1,7 +1,156 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block extra_css %}
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+        margin-bottom: 1rem;
+    }
 
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+        color: var(--miasma-lemon);
+    }
+
+    h2, h3 {
+        color: var(--miasma-lemon);
+        margin-bottom: 1rem;
+    }
+
+    .list-group-item {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+        margin-bottom: 0.5rem;
+    }
+
+    .list-group-item-info {
+        background-color: var(--miasma-river);
+        border-color: var(--miasma-sky);
+    }
+
+    .list-group-item-warning {
+        background-color: var(--miasma-walnut);
+        border-color: var(--miasma-ecru);
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-copper);
+        border-color: var(--miasma-copper);
+    }
+
+    .btn-success {
+        background-color: var(--miasma-eucalyptus);
+        border-color: var(--miasma-eucalyptus);
+        color: var(--miasma-obsidian);
+    }
+
+    .btn-success:hover {
+        background-color: var(--miasma-reseda);
+        border-color: var(--miasma-reseda);
+    }
+
+    .btn-danger {
+        background-color: var(--miasma-fire);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+    }
+
+    .btn-danger:hover {
+        background-color: var(--miasma-terracota);
+        border-color: var(--miasma-chestnut);
+    }
+
+    .btn-outline-primary {
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-tangerine);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+    }
+
+    .btn-outline-warning {
+        border-color: var(--miasma-ecru);
+        color: var(--miasma-ecru);
+    }
+
+    .btn-outline-warning:hover {
+        background-color: var(--miasma-ecru);
+        border-color: var(--miasma-ecru);
+        color: var(--miasma-walnut);
+    }
+
+    .btn-outline-danger {
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-terracota);
+    }
+
+    .btn-outline-danger:hover {
+        background-color: var(--miasma-terracota);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+    }
+
+    .text-muted {
+        color: var(--miasma-light-gray) !important;
+    }
+
+    .list-group {
+        background-color: transparent;
+        border: none;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    /* Ensure all text is visible on dark backgrounds */
+    .list-group-item strong,
+    .list-group-item div,
+    .list-group-item p {
+        color: var(--miasma-marble);
+    }
+
+    /* Override any Bootstrap text colors that might cause issues */
+    .list-group-item,
+    .list-group-item * {
+        color: inherit;
+    }
+
+    /* Make sure form text and other elements are visible */
+    small, .small {
+        color: var(--miasma-light-gray);
+    }
+
+    /* Ensure all text in the main content area is visible on dark backgrounds */
+    .container p,
+    .container div:not(.list-group-item),
+    .container span {
+        color: var(--miasma-marble);
+    }
+
+    /* Override any default Bootstrap text colors */
+    .container * {
+        color: inherit;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
   <!--button to link to create a job posting only for OWNERS-->
   {% if user.owner_profile %}
     <a href="{% url 'job_board:job_create' %}" class="btn btn-primary">+ Create Job</a>
@@ -132,4 +281,5 @@
       <p>No matching jobs available.</p>
     {% endif %}
   {% endif %}
+</div>
 {% endblock %}

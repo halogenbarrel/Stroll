@@ -16,33 +16,56 @@
         border-bottom: 1px solid var(--miasma-graphite);
     }
 
+    .card-header h2,
     .card-header h5 {
         color: var(--miasma-lemon);
         margin: 0;
     }
 
-    h2 {
-        color: var(--miasma-lemon);
-        margin-bottom: 1.5rem;
+    .form-label {
+        color: var(--miasma-light-gray);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
     }
 
-    .form-group p {
-        text-align: justify;
+    .form-check-label {
         color: var(--miasma-light-gray);
     }
 
-    .card-body .form-group label {
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-        color: var(--miasma-light-gray);
+    .form-check-input:checked {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-copper);
+        border-color: var(--miasma-copper);
+    }
+
+    .alert-danger {
+        background-color: var(--miasma-fire);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+    }
+
+    .text-danger {
+        color: var(--miasma-terracota);
     }
 
     .card-body input,
     .card-body select,
     .card-body textarea {
         width: 100%;
-        padding: 0.375rem 0.75rem;
-        margin-bottom: 1rem;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
         border: 1px solid var(--miasma-graphite);
         border-radius: 0.25rem;
         background-color: var(--miasma-obsidian);
@@ -58,8 +81,25 @@
         color: var(--miasma-marble);
     }
 
+    /* Limit bio and address field heights to 3 lines */
+    .card-body textarea[id*="bio"] {
+        min-height: 3rem;
+        max-height: 3rem;
+        resize: vertical;
+        overflow-y: auto;
+    }
+
+    /* Target address field specifically */
+    .owner-card .card-body input[type="text"],
+    .owner-card .card-body textarea {
+        min-height: 3rem;
+        max-height: 3rem;
+        resize: vertical;
+        overflow-y: auto;
+    }
+
     .card-body textarea {
-        min-height: 100px;
+        min-height: 60px;
     }
 
     input[type="checkbox"] {
@@ -68,17 +108,65 @@
         margin-left: 0.25rem;
     }
 
-    #walker-fields {
-        display: block;
+    /* Walker and Owner field containers */
+    #walker-fields,
+    #owner-fields {
+        background-color: var(--miasma-obsidian);
+        border: 1px solid var(--miasma-graphite);
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Card positioning and fade animations */
+    .walker-card-container,
+    .owner-card-container {
+        position: static;
+        width: 100%;
+        max-width: 400px;
+        margin-top: 1rem;
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+        pointer-events: none;
+    }
+
+    .walker-card-container.show,
+    .owner-card-container.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .walker-card,
+    .owner-card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border-left: 3px solid var(--miasma-tangerine);
+    }
+
+    /* Mobile optimizations - ensure proper spacing */
+    @media (max-width: 991.98px) {
+        .card-body {
+            padding: 1rem;
+        }
+
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .walker-card,
+        .owner-card {
+            margin-left: 0;
+        }
     }
 </style>
 
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-3">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <!-- Main registration card -->
+        <div class="col-lg-6 col-md-8 mb-4">
             <div class="card">
                 <div class="card-header">
                     <h2 class="text-center">Register for Stroll</h2>
@@ -93,87 +181,101 @@
                         </div>
                         {% endif %}
 
-                        <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">Username:</label>
+                        <div class="mb-2">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
                             {{ form.username }}
                             {% if form.username.errors %}
                             <div class="text-danger">{{ form.username.errors }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.email.id_for_label }}" class="form-label">Email:</label>
+                        <div class="mb-2">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
                             {{ form.email }}
                             {% if form.email.errors %}
                             <div class="text-danger">{{ form.email.errors }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.password1.id_for_label }}" class="form-label">Password:</label>
+                        <div class="mb-2">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
                             {{ form.password1 }}
                             {% if form.password1.errors %}
                             <div class="text-danger">{{ form.password1.errors }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password:</label>
+                        <div class="mb-2">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
                             {{ form.password2 }}
                             {% if form.password2.errors %}
                             <div class="text-danger">{{ form.password2.errors }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <label class="form-check-label" for="{{ form.is_walker.id_for_label }}">
-                                    Register as Walker
-                                </label>
-                                {{ form.is_walker }}
-                            </div>
-                            <div id="walker-fields" class="mt-3" style="display: none;">
-                                <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
-                                {{ form.bio }}
-                                <p></p>
-                                <label for="{{ form.temperament.id_for_label }}" class="form-label">Temperaments
-                                    preference:</label>
-                                {{ form.temperament }}
-                                <p></p>
-                                <label for="{{ form.energy_level.id_for_label }}" class="form-label">Energy level
-                                    preference:</label>
-                                {{ form.energy_level }}
-                                <p></p>
-                                <label for="{{ form.weight_range.id_for_label }}" class="form-label">Weight
-                                    preference:</label>
-                                {{ form.weight_range }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <label class="form-check-label" for="{{ form.is_owner.id_for_label }}">
-                                    Register as Owner
-                                </label>
-                                {{ form.is_owner }}
-                            </div>
-                            <div id="owner-fields" class="mt-3" style="display: none;">
-                                <div class="mb-3">
-                                    <label for="{{ form.address.id_for_label }}" class="form-label">Address:</label>
-                                    {{ form.address }}
+                        <!-- Role toggles in main card -->
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="{{ form.is_walker.id_for_label }}">
+                                        Register as Walker
+                                    </label>
+                                    {{ form.is_walker }}
                                 </div>
-                                <div class="mb-3">
-                                    <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone
-                                        Number:</label>
-                                    {{ form.phone_number }}
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="{{ form.is_owner.id_for_label }}">
+                                        Register as Owner
+                                    </label>
+                                    {{ form.is_owner }}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="text-center">
+                        <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">Register</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role-specific cards below -->
+    <div class="row justify-content-center">
+        <!-- Walker card -->
+        <div class="col-lg-6 col-md-8 walker-card-container">
+            <div class="card walker-card">
+                <div class="card-header">
+                    <h5 class="text-center mb-0">Walker Details</h5>
+                </div>
+                <div class="card-body">
+                    <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                    {{ form.bio }}
+                    <label for="{{ form.temperament.id_for_label }}" class="form-label">Temperament preference:</label>
+                    {{ form.temperament }}
+                    <label for="{{ form.energy_level.id_for_label }}" class="form-label">Energy level preference:</label>
+                    {{ form.energy_level }}
+                    <label for="{{ form.weight_range.id_for_label }}" class="form-label">Weight preference:</label>
+                    {{ form.weight_range }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner card -->
+        <div class="col-lg-6 col-md-8 owner-card-container">
+            <div class="card owner-card">
+                <div class="card-header">
+                    <h5 class="text-center mb-0">Owner Details</h5>
+                </div>
+                <div class="card-body">
+                        <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                        {{ form.address }}
+                    <div class="mb-2">
+                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                        {{ form.phone_number }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,16 +288,34 @@
     document.addEventListener('DOMContentLoaded', function () {
         const walkerCheckbox = document.querySelector('#{{ form.is_walker.id_for_label }}');
         const ownerCheckbox = document.querySelector('#{{ form.is_owner.id_for_label }}');
-        const walkerFields = document.querySelector('#walker-fields');
-        const ownerFields = document.querySelector('#owner-fields');
+        const walkerCardContainer = document.querySelector('.walker-card-container');
+        const ownerCardContainer = document.querySelector('.owner-card-container');
+        const mainCard = document.querySelector('.main-card');
+        const row = document.querySelector('.row');
 
-        walkerCheckbox.addEventListener('change', function () {
-            walkerFields.style.display = this.checked ? 'block' : 'none';
-        });
+        function updateLayout() {
+            const walkerChecked = walkerCheckbox.checked;
+            const ownerChecked = ownerCheckbox.checked;
 
-        ownerCheckbox.addEventListener('change', function () {
-            ownerFields.style.display = this.checked ? 'block' : 'none';
-        });
+            // Show/hide cards based on checkboxes with fade animations
+            if (walkerChecked) {
+                walkerCardContainer.classList.add('show');
+            } else {
+                walkerCardContainer.classList.remove('show');
+            }
+
+            if (ownerChecked) {
+                ownerCardContainer.classList.add('show');
+            } else {
+                ownerCardContainer.classList.remove('show');
+            }
+        }
+
+        walkerCheckbox.addEventListener('change', updateLayout);
+        ownerCheckbox.addEventListener('change', updateLayout);
+
+        // Initial layout update
+        updateLayout();
     });
 </script>
 {% endblock %}

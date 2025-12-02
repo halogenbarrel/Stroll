@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Create a New Job Posting</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+            <h2>Create a New Job Posting</h2>
 
-    <div class="card mb-4">
+            <div class="card mb-4">
         <div class="card-header">
             <h5 class="mb-0">Job Details</h5>
         </div>
@@ -16,6 +18,7 @@
                     <a href="{% url 'job_board:job_list' %}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </div>
@@ -34,12 +37,12 @@
     }
 
     .card-header h5 {
-        color: var(--miasma-lemon);
+        color: var(--miasma-reseda);
         margin: 0;
     }
 
     h2 {
-        color: var(--miasma-lemon);
+        color: var(--miasma-marble);
         margin-bottom: 1.5rem;
     }
 
@@ -67,10 +70,13 @@
     }
 
     .card-body input:focus,
-    .card-body select:focus,
+    .card-body select:focus {
+        border-color: var(--miasma-obsidian);
+        box-shadow: 0 0 0 0.2rem rgba(156, 156, 156, 0.25);
+    },
     .card-body textarea:focus {
-        border-color: var(--miasma-tangerine);
-        box-shadow: 0 0 0 0.2rem rgba(253, 151, 32, 0.25);
+        border-color: var(--miasma-obsidian);
+        box-shadow: 0 0 0 0.2rem rgba(156, 156, 156, 0.25);
         background-color: var(--miasma-obsidian);
         color: var(--miasma-marble);
     }
@@ -80,14 +86,14 @@
     }
 
     .btn-primary {
-        background-color: var(--miasma-tangerine);
-        border-color: var(--miasma-tangerine);
+        background-color: var(--miasma-eucalyptus);
+        border-color: var(--miasma-eucalyptus);
         color: var(--miasma-obsidian);
         font-weight: 500;
     }
 
     .btn-primary:hover {
-        background-color: var(--miasma-copper);
+        background-color: var(--miasma-eucalyptus);
         border-color: var(--miasma-copper);
     }
 

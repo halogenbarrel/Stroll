@@ -9,51 +9,116 @@
 -->
 
 <style>
-  .settings-container {
+  /* Custom card styling that builds on Bootstrap */
+  .card {
+    border: none;
+    background: var(--miasma-river);
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100px;
+  }
+
+  .card-link {
+    text-decoration: none;
+    display: block;
+    height: 100%;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    background: var(--miasma-river-alpha);
+    cursor: pointer;
+  }
+
+  .card-body {
+    padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
-  }
-
-  .settings-options {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 30px;
-  }
-
-  .settings-button {
-    padding: 12px 24px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    text-decoration: none;
-    color: #333;
-    font-size: 18px;
+    justify-content: center;
     text-align: center;
-    width: 250px;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+    height: 100%;
+    width: 100%;
   }
 
-  .settings-button:hover {
-    background-color: #e0e0e0;
+  .card-title {
+    color: var(--miasma-sky);
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    text-align: center;
+    width: 100%;
   }
 
-  .logout {
-    color: red;
-    border-color: red;
+  .card-body h2 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Custom welcome text styling */
+  .welcome-text {
+    color: var(--miasma-marble);
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  /* Add some spacing and max-width to the container */
+  .settings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  /* Make cards same height and center content */
+  .settings-options {
+    margin-top: 2rem;
+  }
+
+  /* Special styling for logout card */
+  .logout-card {
+    background: var(--miasma-fire);
+  }
+
+  .logout-card:hover {
+    background: var(--miasma-terracota);
+  }
+
+  .logout-card .card-title {
+    color: var(--miasma-marble);
   }
 </style>
 
 <div class="settings-container">
-  <h2>Settings</h2>
-  <div class="settings-options">
-    <a href="{% url 'userbase:edit_profile' %}" class="settings-button">Edit My Info</a>
+  <h1 class="welcome-text">Settings</h1>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4 settings-options">
+    <div class="col">
+      <a href="{% url 'userbase:edit_profile' %}" class="card-link">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">Edit My Info</h2>
+          </div>
+        </div>
+      </a>
+    </div>
 
     <!-- only owners can see button to edit dogs, and they can only view their dogs in edit page-->
     {% if user.owner_profile %}
-    <a href="{% url 'owner_dashboard' %}" class="settings-button">Edit Dog Profiles</a>
+    <div class="col">
+      <a href="{% url 'owner_dashboard' %}" class="card-link">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">Edit Dog Profiles</h2>
+          </div>
+        </div>
+      </a>
+    </div>
     {% endif %}
 
   </div>

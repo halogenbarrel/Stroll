@@ -1,34 +1,209 @@
 {% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+    }
+
+    .card-header h2,
+    .card-header h5 {
+        color: var(--miasma-lemon);
+        margin: 0;
+    }
+
+    h2 {
+        color: var(--miasma-lemon);
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: var(--miasma-light-gray);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .card-body input,
+    .card-body select,
+    .card-body textarea,
+    .card-body input[type="file"] {
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--miasma-graphite);
+        border-radius: 0.25rem;
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .card-body input:focus,
+    .card-body select:focus,
+    .card-body textarea:focus,
+    .card-body input[type="file"]:focus {
+        border-color: var(--miasma-tangerine);
+        box-shadow: 0 0 0 0.2rem rgba(253, 151, 32, 0.25);
+        background-color: var(--miasma-obsidian);
+        color: var(--miasma-marble);
+    }
+
+    .card-body textarea {
+        min-height: 60px;
+    }
+
+    .form-text {
+        color: var(--miasma-light-gray);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .btn-primary {
+        background-color: var(--miasma-tangerine);
+        border-color: var(--miasma-tangerine);
+        color: var(--miasma-obsidian);
+        font-weight: 500;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--miasma-copper);
+        border-color: var(--miasma-copper);
+    }
+
+    .btn-secondary {
+        background-color: var(--miasma-graphite);
+        border-color: var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--miasma-dark-gray);
+        border-color: var(--miasma-dark-gray);
+    }
+
+    .text-danger,
+    .alert-danger {
+        color: var(--miasma-terracota);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Create Dog Profile</h2>
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% for field in form %}
+        <div class="col-lg-5 col-md-6">
+            <h2>Create Dog Profile</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Dog Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Dog Information</h5>
+                    </div>
+                    <div class="card-body">
                         <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.help_text %}
-                            <div class="form-text">{{ field.help_text }}</div>
+                            {{ form.name.label_tag }}
+                            {{ form.name }}
+                            {% if form.name.help_text %}
+                            <div class="form-text">{{ form.name.help_text }}</div>
                             {% endif %}
-                            {% if field.errors %}
-                            <div class="alert alert-danger mt-2">
-                                {{ field.errors }}
-                            </div>
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
                             {% endif %}
                         </div>
-                        {% endfor %}
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Save Dog</button>
-                            <a href="{% url 'dog_list' %}" class="btn btn-secondary">Cancel</a>
+
+                        <div class="mb-3">
+                            {{ form.breed.label_tag }}
+                            {{ form.breed }}
+                            {% if form.breed.help_text %}
+                            <div class="form-text">{{ form.breed.help_text }}</div>
+                            {% endif %}
+                            {% if form.breed.errors %}
+                                <div class="text-danger">{{ form.breed.errors }}</div>
+                            {% endif %}
                         </div>
-                    </form>
+
+                        <div class="mb-3">
+                            {{ form.age.label_tag }}
+                            {{ form.age }}
+                            {% if form.age.help_text %}
+                            <div class="form-text">{{ form.age.help_text }}</div>
+                            {% endif %}
+                            {% if form.age.errors %}
+                                <div class="text-danger">{{ form.age.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.temperament.label_tag }}
+                            {{ form.temperament }}
+                            {% if form.temperament.help_text %}
+                            <div class="form-text">{{ form.temperament.help_text }}</div>
+                            {% endif %}
+                            {% if form.temperament.errors %}
+                                <div class="text-danger">{{ form.temperament.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.energy_level.label_tag }}
+                            {{ form.energy_level }}
+                            {% if form.energy_level.help_text %}
+                            <div class="form-text">{{ form.energy_level.help_text }}</div>
+                            {% endif %}
+                            {% if form.energy_level.errors %}
+                                <div class="text-danger">{{ form.energy_level.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.weight.label_tag }}
+                            {{ form.weight }}
+                            {% if form.weight.help_text %}
+                            <div class="form-text">{{ form.weight.help_text }}</div>
+                            {% endif %}
+                            {% if form.weight.errors %}
+                                <div class="text-danger">{{ form.weight.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.help_text %}
+                            <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                            {% if form.description.errors %}
+                                <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.photo.label_tag }}
+                            {{ form.photo }}
+                            {% if form.photo.help_text %}
+                            <div class="form-text">{{ form.photo.help_text }}</div>
+                            {% endif %}
+                            {% if form.photo.errors %}
+                                <div class="text-danger">{{ form.photo.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Dog</button>
+                    <a href="{% url 'dog_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
