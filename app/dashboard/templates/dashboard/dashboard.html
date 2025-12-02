@@ -5,10 +5,7 @@
     /* Custom card styling that builds on Bootstrap */
     .card {
         border: none;
-        background: rgba(114, 161, 231, 0.4);
-        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.1),
-            -4px -4px 15px rgba(255, 255, 255, 0.8),
-            inset 2px 2px 5px rgba(255, 255, 255, 0.1);
+        background: var(--miasma-river);
         transition: all 0.3s ease;
         border-radius: 15px;
         display: flex;
@@ -26,10 +23,7 @@
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.15),
-            -6px -6px 20px rgba(255, 255, 255, 0.9),
-            inset 2px 2px 5px rgba(255, 255, 255, 0.2);
-        background: rgba(114, 161, 231, 1);
+        background: var(--miasma-river-alpha);
         cursor: pointer;
     }
 
@@ -38,7 +32,7 @@
     }
 
     .card-title {
-        color: #2c3e50;
+        color: var(--miasma-sky);
         font-size: 1.5rem;
         margin-bottom: 1.5rem;
         text-align: center;
@@ -61,7 +55,7 @@
 
     /* Custom welcome text styling */
     .welcome-text {
-        color: #2c3e50;
+        color: var(--miasma-marble);
         font-size: 2.5rem;
         font-weight: 600;
         margin-bottom: 2rem;
