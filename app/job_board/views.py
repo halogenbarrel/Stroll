@@ -82,13 +82,8 @@ def job_list(request):
     elif hasattr(user, "walker_profile"):
         walker = user.walker_profile
 
-        # Handle empty or malformed weight_range
-        try:
-            min_weight = walker.weight_range[0]
-            max_weight = walker.weight_range[1]
-        except (IndexError, TypeError):
-            min_weight = 0
-            max_weight = 300
+        # Validate and extract weight range with proper bounds checking
+        min_weight, max_weight = validate_weight_range(walker.weight_range)
 
         # Walker: show assigned + matching open jobs
         assigned_jobs = Job.objects.filter(walker=walker, status="ASSIGNED").order_by(
