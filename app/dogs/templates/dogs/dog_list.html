@@ -2,6 +2,11 @@
 {% block content %}
 
 <style>
+  h2 {
+    color: var(--miasma-reseda);
+    margin-bottom: 1.5rem;
+  }
+
   .dog-grid {
     display: flex;
     flex-wrap: wrap;
@@ -53,8 +58,13 @@
     color: white;
   }
 
-  .edit-btn { background: #4caf50; }
-  .delete-btn { background: #e53935; }
+  .edit-btn {
+    background: #4caf50;
+  }
+
+  .delete-btn {
+    background: #e53935;
+  }
 </style>
 
 <div class="header-container" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -63,26 +73,26 @@
 </div>
 
 {% if dogs %}
-  <div class="dog-grid">
-    {% for dog in dogs %}
-      <div class="dog-card">
-        <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
-        <h3>{{ dog.dog_name }}</h3>
+<div class="dog-grid">
+  {% for dog in dogs %}
+  <div class="dog-card">
+    <img src="{{ dog.photo.url }}" alt="{{ dog.dog_name }}">
+    <h3>{{ dog.dog_name }}</h3>
 
-        <div class="dog-card-overlay">
-          <a href="{% url 'edit_dog' dog.id %}" class="overlay-btn edit-btn">Edit</a>
+    <div class="dog-card-overlay">
+      <a href="{% url 'edit_dog' dog.id %}" class="overlay-btn edit-btn">Edit</a>
 
-          <form method="POST" action="{% url 'delete_dog' dog.id %}">
-            {% csrf_token %}
-            <button type="submit" class="overlay-btn delete-btn">Delete</button>
-          </form>
-        </div>
+      <form method="POST" action="{% url 'delete_dog' dog.id %}">
+        {% csrf_token %}
+        <button type="submit" class="overlay-btn delete-btn">Delete</button>
+      </form>
+    </div>
 
-      </div>
-    {% endfor %}
   </div>
+  {% endfor %}
+</div>
 {% else %}
-  <p>You haven't added any dogs yet.</p>
+<p>You haven't added any dogs yet.</p>
 {% endif %}
 
 {% endblock %}
