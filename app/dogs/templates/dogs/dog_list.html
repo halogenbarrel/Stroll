@@ -55,21 +55,63 @@
     border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
-    color: white;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
   }
 
   .edit-btn {
-    background: #4caf50;
+    background-color: var(--miasma-eucalyptus);
+    border-color: var(--miasma-eucalyptus);
+    color: var(--miasma-marble);
+  }
+
+  .edit-btn:hover {
+    background-color: var(--miasma-tangerine);
+    border-color: var(--miasma-tangerine);
+    color: var(--miasma-marble) !important;
   }
 
   .delete-btn {
-    background: #e53935;
+    background-color: var(--miasma-terracota);
+    border-color: var(--miasma-terracota);
+    color: var(--miasma-marble);
   }
+
+  .delete-btn:hover {
+    background-color: var(--miasma-chestnut);
+    border-color: var(--miasma-chestnut);
+  }
+
+  .add-dog-btn {
+    background-color: var(--miasma-eucalyptus);
+    border-color: var(--miasma-eucalyptus);
+    color: var(--miasma-marble);
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .add-dog-btn:hover {
+    background-color: var(--miasma-tangerine);
+    border-color: var(--miasma-tangerine);
+    color: var(--miasma-marble) !important;
+  }
+
+  /* Ensure all text in the main content area is visible on dark backgrounds */
+  .container p,
+  .container div:not(.list-group-item),
+  .container span {
+      color: var(--miasma-marble);
+  }
+
 </style>
 
 <div class="header-container" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
   <h2>My Dogs</h2>
-  <a href="{% url 'create_dog' %}" class="btn btn-primary">Add New Dog</a>
+  <a href="{% url 'create_dog' %}" class="add-dog-btn">Add New Dog</a>
 </div>
 
 {% if dogs %}

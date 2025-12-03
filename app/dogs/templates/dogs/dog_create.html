@@ -110,13 +110,13 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {{ form.name.label_tag }}
-                            {{ form.name }}
-                            {% if form.name.help_text %}
-                            <div class="form-text">{{ form.name.help_text }}</div>
+                            {{ form.dog_name.label_tag }}
+                            {{ form.dog_name }}
+                            {% if form.dog_name.help_text %}
+                            <div class="form-text">{{ form.dog_name.help_text }}</div>
                             {% endif %}
-                            {% if form.name.errors %}
-                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% if form.dog_name.errors %}
+                                <div class="text-danger">{{ form.dog_name.errors }}</div>
                             {% endif %}
                         </div>
 
@@ -175,16 +175,6 @@
                             {% endif %}
                         </div>
 
-                        <div class="mb-3">
-                            {{ form.description.label_tag }}
-                            {{ form.description }}
-                            {% if form.description.help_text %}
-                            <div class="form-text">{{ form.description.help_text }}</div>
-                            {% endif %}
-                            {% if form.description.errors %}
-                                <div class="text-danger">{{ form.description.errors }}</div>
-                            {% endif %}
-                        </div>
 
                         <div class="mb-3">
                             {{ form.photo.label_tag }}
