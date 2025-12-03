@@ -54,9 +54,4 @@ jobs:
     - name: run tests
       working-directory: ./app
       run: |
-        python manage.py test --verbosity=2
-
-    - name: run selenium tests
-      working-directory: ./SelTest
-      run: |
-        pytest -s "test_*.py"
+        ../run-tests.sh
