@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -28,7 +28,14 @@ class TestOwnerJobCreation():
   def test_ownerJobCreation(self):
     self.driver.get("http://localhost:8000/")
     self.driver.set_window_size(990, 1068)
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Login").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Owner")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")

@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -28,14 +28,28 @@ class TestJobFiltering():
   def test_jobFiltering(self):
     self.driver.get("http://localhost:8000/")
     self.driver.set_window_size(990, 1068)
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Login").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Owner")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")
     self.driver.find_element(By.CSS_SELECTOR, "button.btn-primary").click()
     self.driver.find_element(By.CSS_SELECTOR, ".col:nth-child(2) .card-body").click()
     self.driver.find_element(By.LINK_TEXT, "+ Create Job").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Dogs").click()
     self.driver.find_element(By.LINK_TEXT, "Add New Dog").click()
     self.driver.find_element(By.ID, "id_dog_name").click()
@@ -58,7 +72,14 @@ class TestJobFiltering():
     self.driver.find_element(By.ID, "id_temperament").click()
     self.driver.find_element(By.CSS_SELECTOR, ".row").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Jobs").click()
     self.driver.find_element(By.LINK_TEXT, "+ Create Job").click()
     self.driver.find_element(By.ID, "id_title").click()
@@ -78,9 +99,23 @@ class TestJobFiltering():
     self.driver.find_element(By.ID, "id_location").click()
     self.driver.find_element(By.ID, "id_location").send_keys("UNO")
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.CSS_SELECTOR, ".nav-link:nth-child(2)").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Login").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Walker")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")

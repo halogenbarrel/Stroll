@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -28,7 +28,14 @@ class TestOwnerAccountCreation():
   def test_ownerAccountCreation(self):
     self.driver.get("http://localhost:8000/")
     self.driver.set_window_size(990, 1068)
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Register").click()
     self.driver.find_element(By.ID, "id_username").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Owner")
@@ -41,6 +48,13 @@ class TestOwnerAccountCreation():
     self.driver.find_element(By.ID, "id_phone_number").click()
     self.driver.find_element(By.ID, "id_phone_number").send_keys("4022223333")
     self.driver.find_element(By.CSS_SELECTOR, ".btn").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.CSS_SELECTOR, ".nav-link > .nav-link:nth-child(1)").click()
   

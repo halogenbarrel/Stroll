@@ -48,7 +48,7 @@ echo -e "${YELLOW}Running Selenium tests...${NC}"
 echo -e "${YELLOW}Note: Make sure Django development server is running on http://localhost:8000${NC}"
 cd ../SelTest
 
-# Test order: accounts must be created first, then dogs, then jobs
+# Test order: accounts must be created first, then dogs, then jobs, then cleanup
 SELENIUM_TESTS=(
     "test_ownerAccountCreation.py::TestOwnerAccountCreation::test_ownerAccountCreation"
     "test_walkerAccountCreation.py::TestWalkerAccountCreation::test_walkerAccountCreation"
@@ -59,6 +59,8 @@ SELENIUM_TESTS=(
     "test_jobFiltering.py::TestJobFiltering::test_jobFiltering"
     "test_jobAcceptance.py::TestJobAcceptance::test_jobAcceptance"
     "test_jobDeletion.py::TestJobDeletion::test_jobDeletion"
+    "test_ownerAccountDeletion.py::TestOwnerAccountDeletion::test_ownerAccountDeletion"
+    "test_walkerAccountDeletion.py::TestWalkerAccountDeletion::test_walkerAccountDeletion"
 )
 
 SELENIUM_FAILED=0
@@ -71,11 +73,6 @@ for test in "${SELENIUM_TESTS[@]}"; do
         SELENIUM_FAILED=1
     fi
 done
-
-# Cleanup test data
-echo -e "${YELLOW}Cleaning up test data...${NC}"
-cd ../app
-python ../SelTest/cleanup_test_data.py
 
 if [ $SELENIUM_FAILED -eq 1 ]; then
     echo -e "${RED}Some Selenium tests failed${NC}"

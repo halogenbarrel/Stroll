@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
 from userbase.models import Doggy, Walker, Owner
@@ -80,3 +80,27 @@ def edit_profile(request):
         form = UserProfileForm(instance=user)
 
     return render(request, "userbase/edit_profile.html", {"form": form})
+
+
+@login_required
+def delete_account(request):
+    """
+    Delete the current user's account and all associated data.
+    This will cascade delete Walker, Owner profiles, and related data.
+    """
+    if request.method == "POST":
+        user = request.user
+        username = user.username
+        
+        # Delete the user (this will cascade delete Walker and Owner profiles)
+        # and all related data (Doggy, Jobs, etc.)
+        user.delete()
+        
+        # Logout the user
+        logout(request)
+        
+        # Redirect to home page
+        return redirect("/")
+    
+    # If GET request, redirect to edit profile
+    return redirect("userbase:edit_profile")
