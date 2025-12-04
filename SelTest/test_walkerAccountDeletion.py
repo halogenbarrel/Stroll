@@ -4,22 +4,18 @@ import time
 import json
 import os
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from conftest import get_driver
 
 class TestWalkerAccountDeletion():
   def setup_method(self, method):
-    options = Options()
-    if os.getenv('HEADLESS', '').lower() in ('true', '1', 'yes'):
-        options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    self.driver = webdriver.Firefox(options=options)
+    # Get browser from command line argument (default: chrome)
+    self.driver = get_driver()
     self.vars = {}
   
   def teardown_method(self, method):
@@ -27,11 +23,9 @@ class TestWalkerAccountDeletion():
   
   def test_walkerAccountDeletion(self):
     # Determine base URL
-    base_url = os.getenv('TEST_URL', 'http://localhost:8000')
+    base_url = os.getenv('TEST_URL', 'http://ec2-18.191.170.51.us-east-1.compute.amazonaws.com:8000')
     self.driver.get(f"{base_url}/")
     self.driver.set_window_size(990, 1068)
-    
-    # Check if navbar toggler is displayed before clicking
     try:
         toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
         if toggler.is_displayed():
@@ -39,17 +33,12 @@ class TestWalkerAccountDeletion():
             time.sleep(0.5)
     except:
         pass
-    
     WebDriverWait(self.driver, 10).until(
         EC.element_to_be_clickable((By.LINK_TEXT, "Login"))
     ).click()
-    
-    # Login as Walker
     self.driver.find_element(By.ID, "id_username").send_keys("Walker")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")
     self.driver.find_element(By.CSS_SELECTOR, "button.btn-primary").click()
-    
-    # Navigate to edit profile - check if navbar toggler is displayed
     try:
         toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
         if toggler.is_displayed():
@@ -57,13 +46,9 @@ class TestWalkerAccountDeletion():
             time.sleep(0.5)
     except:
         pass
-    
-    # Click on settings/profile link
     WebDriverWait(self.driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'settings') or contains(@href, 'edit')]"))
     ).click()
-    
-    # If we're on settings page, click edit profile
     try:
         edit_link = WebDriverWait(self.driver, 5).until(
             EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'edit')]"))
@@ -71,33 +56,18 @@ class TestWalkerAccountDeletion():
         edit_link.click()
     except:
         pass  # Already on edit page
-    
-    # Wait for delete account button and scroll to it
     delete_btn = WebDriverWait(self.driver, 10).until(
         EC.presence_of_element_located((By.ID, "delete-account-btn"))
     )
     self.driver.execute_script("arguments[0].scrollIntoView(true);", delete_btn)
     time.sleep(0.5)
-    
-    # Click delete account button - this will trigger JavaScript confirm dialogs
     delete_btn.click()
     time.sleep(0.5)
-    
-    # Handle first confirmation dialog
     try:
         WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert = self.driver.switch_to.alert
-        alert.accept()  # First confirmation
+        alert.accept()
         time.sleep(0.5)
     except:
         pass
     
-    # Handle second confirmation dialog
-    try:
-        WebDriverWait(self.driver, 5).until(EC.alert_is_present())
-        alert = self.driver.switch_to.alert
-        alert.accept()  # Second confirmation
-        time.sleep(1)
-    except:
-        pass
-  
