@@ -52,6 +52,6 @@ jobs:
         python manage.py migrate --verbosity=1
 
     - name: run tests
-      working-directory: ./app
+      working-directory: .
       run: |
-        ../run-tests.sh
+        ./run-tests.sh
