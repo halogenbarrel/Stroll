@@ -39,9 +39,25 @@ python manage.py check
 echo -e "${YELLOW}Running migrations...${NC}"
 python manage.py migrate --verbosity=0
 
+# Get browser from first argument if it's chrome or firefox, otherwise default to chrome
+BROWSER="chrome"
+DJANGO_ARGS=()
+
+if [ $# -gt 0 ]; then
+    if [ "$1" = "chrome" ] || [ "$1" = "firefox" ]; then
+        BROWSER="$1"
+        # Skip browser arg for Django tests, pass remaining args
+        shift
+        DJANGO_ARGS=("$@")
+    else
+        # First arg is not a browser, pass all args to Django tests
+        DJANGO_ARGS=("$@")
+    fi
+fi
+
 # Run Django unit tests
 echo -e "${YELLOW}Running Django unit tests...${NC}"
-python manage.py test "$@"
+python manage.py test "${DJANGO_ARGS[@]}"
 
 # Run Selenium tests in order
 echo -e "${YELLOW}Running Selenium tests...${NC}"
@@ -63,10 +79,18 @@ SELENIUM_TESTS=(
     "test_walkerAccountDeletion.py::TestWalkerAccountDeletion::test_walkerAccountDeletion"
 )
 
+# Validate browser choice
+if [ "$BROWSER" != "chrome" ] && [ "$BROWSER" != "firefox" ]; then
+    echo -e "${RED}Invalid browser: $BROWSER. Use 'chrome' or 'firefox'${NC}"
+    exit 1
+fi
+
+echo -e "${YELLOW}Running Selenium tests with browser: $BROWSER${NC}"
+
 SELENIUM_FAILED=0
 for test in "${SELENIUM_TESTS[@]}"; do
     echo -e "${YELLOW}Running ${test}...${NC}"
-    if pytest -v -s "$test"; then
+    if pytest -v -s "$test" --browser "$BROWSER"; then
         echo -e "${GREEN}${test} passed${NC}"
     else
         echo -e "${RED}${test} failed${NC}"
