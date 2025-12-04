@@ -3,31 +3,102 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Delete Job Posting</h5>
+        <div class="col-lg-5 col-md-6">
+            <div class="card" id="delete-job-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Danger Zone</h5>
                 </div>
                 <div class="card-body">
-                    <h6 class="card-title">Are you sure you want to delete this job?</h6>
-                    <div class="alert alert-warning">
-                        <strong>{{ job.title }}</strong><br>
-                        Duration: {{ job.duration }} minutes<br>
-                        {% if job.location %}Location: {{ job.location }}<br>{% endif %}
-                        Status: {{ job.status }}
+                    <p class="mb-3">Once you delete this job, there is no going back. Please be certain.</p>
+                    
+                    <div class="mb-3">
+                        <strong>Job Details:</strong>
+                        <div class="mt-2">
+                            <strong>{{ job.title }}</strong><br>
+                            Duration: {{ job.duration }} minutes<br>
+                            {% if job.location %}Location: {{ job.location }}<br>{% endif %}
+                            Status: {{ job.status }}
+                        </div>
                     </div>
-                    <p class="text-muted">This action cannot be undone.</p>
 
-                    <div class="d-flex gap-2">
-                        <form method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Yes, Delete Job</button>
-                        </form>
-                        <a href="{% url 'job_board:job_list' %}" class="btn btn-secondary">Cancel</a>
-                    </div>
+                    <form method="post" id="delete-job-form">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger" id="delete-job-btn">Delete Job</button>
+                            <a href="{% url 'job_board:job_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        background-color: var(--miasma-charcoal);
+        border: 1px solid var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .card-header {
+        background-color: var(--miasma-obsidian);
+        border-bottom: 1px solid var(--miasma-graphite);
+    }
+
+    .card-header h5 {
+        color: var(--miasma-reseda);
+        margin: 0;
+    }
+
+    /* Delete Job Section Styling */
+    #delete-job-card {
+        border-color: var(--miasma-terracota);
+    }
+
+    #delete-job-card .card-header {
+        background-color: var(--miasma-terracota);
+        border-bottom: 1px solid var(--miasma-terracota);
+    }
+
+    #delete-job-card .card-header h5 {
+        color: var(--miasma-obsidian);
+    }
+
+    #delete-job-card .card-body {
+        color: var(--miasma-marble);
+    }
+
+    #delete-job-card .card-body p {
+        color: var(--miasma-light-gray);
+    }
+
+    #delete-job-card .card-body strong {
+        color: var(--miasma-marble);
+    }
+
+    .btn-danger {
+        background-color: var(--miasma-terracota);
+        border-color: var(--miasma-terracota);
+        color: var(--miasma-marble);
+        font-weight: 500;
+    }
+
+    .btn-danger:hover {
+        background-color: var(--miasma-chestnut);
+        border-color: var(--miasma-chestnut);
+        color: var(--miasma-marble);
+    }
+
+    .btn-secondary {
+        background-color: var(--miasma-graphite);
+        border-color: var(--miasma-graphite);
+        color: var(--miasma-marble);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--miasma-dark-gray);
+        border-color: var(--miasma-dark-gray);
+    }
+</style>
 {% endblock %}

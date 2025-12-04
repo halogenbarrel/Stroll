@@ -12,7 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from conftest import get_driver
 
-class TestAccountediting():
+class TestOwnerAccountDeletion():
   def setup_method(self, method):
     # Get browser from command line argument (default: chrome)
     self.driver = get_driver()
@@ -21,10 +21,10 @@ class TestAccountediting():
   def teardown_method(self, method):
     self.driver.quit()
   
-  def test_accountediting(self):
-    self.driver.get("http://ec2-18.191.170.51.us-east-1.compute.amazonaws.com:8000/")
+  def test_ownerAccountDeletion(self):
+    base_url = os.getenv('TEST_URL', 'http://ec2-18.191.170.51.us-east-1.compute.amazonaws.com:8000')
+    self.driver.get(f"{base_url}/")
     self.driver.set_window_size(990, 1068)
-    # Check if navbar toggler is displayed before clicking
     try:
         toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
         if toggler.is_displayed():
@@ -32,11 +32,13 @@ class TestAccountediting():
             time.sleep(0.5)
     except:
         pass
-    self.driver.find_element(By.LINK_TEXT, "Login").click()
+    
+    WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((By.LINK_TEXT, "Login"))
+    ).click()
     self.driver.find_element(By.ID, "id_username").send_keys("Owner")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")
     self.driver.find_element(By.CSS_SELECTOR, "button.btn-primary").click()
-    # Check if navbar toggler is displayed before clicking
     try:
         toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
         if toggler.is_displayed():
@@ -44,12 +46,28 @@ class TestAccountediting():
             time.sleep(0.5)
     except:
         pass
-    self.driver.find_element(By.CSS_SELECTOR, ".nav-link > .nav-link:nth-child(1)").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".col:nth-child(1) .card-body").click()
-    self.driver.find_element(By.ID, "id_first_name").click()
-    self.driver.find_element(By.ID, "id_first_name").send_keys("Peter")
-    self.driver.find_element(By.ID, "id_address").click()
-    self.driver.find_element(By.ID, "id_address").send_keys("14442 Pacific ave.")
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".col:nth-child(1) .card-title").click()
+    WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'settings') or contains(@href, 'edit')]"))
+    ).click()
+    try:
+        edit_link = WebDriverWait(self.driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'edit')]"))
+        )
+        edit_link.click()
+    except:
+        pass  # Already on edit page
+    delete_btn = WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((By.ID, "delete-account-btn"))
+    )
+    self.driver.execute_script("arguments[0].scrollIntoView(true);", delete_btn)
+    time.sleep(0.5)
+    delete_btn.click()
+    time.sleep(0.5)
+    try:
+        WebDriverWait(self.driver, 5).until(EC.alert_is_present())
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        time.sleep(0.5)
+    except:
+        pass
   

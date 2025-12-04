@@ -4,40 +4,57 @@ import time
 import json
 import os
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from conftest import get_driver
 
 class TestJobAcceptance():
   def setup_method(self, method):
-    options = Options()
-    if os.getenv('HEADLESS', '').lower() in ('true', '1', 'yes'):
-        options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    self.driver = webdriver.Firefox(options=options)
+    # Get browser from command line argument (default: chrome)
+    self.driver = get_driver()
     self.vars = {}
   
   def teardown_method(self, method):
     self.driver.quit()
   
   def test_jobAcceptance(self):
-    self.driver.get("http://localhost:8000/")
+    self.driver.get("http://ec2-18.191.170.51.us-east-1.compute.amazonaws.com:8000/")
     self.driver.set_window_size(990, 1068)
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Login").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Walker")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")
     self.driver.find_element(By.CSS_SELECTOR, "button.btn-primary").click()
     self.driver.find_element(By.CSS_SELECTOR, ".col:nth-child(2) .card-title").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn-success").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler-icon").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.CSS_SELECTOR, ".nav-link:nth-child(2)").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler").click()
+    # Check if navbar toggler is displayed before clicking
+    try:
+        toggler = self.driver.find_element(By.CSS_SELECTOR, ".navbar-toggler")
+        if toggler.is_displayed():
+            toggler.click()
+            time.sleep(0.5)
+    except:
+        pass
     self.driver.find_element(By.LINK_TEXT, "Login").click()
     self.driver.find_element(By.ID, "id_username").send_keys("Owner")
     self.driver.find_element(By.ID, "id_password").send_keys("strongpassword")

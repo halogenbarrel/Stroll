@@ -1,4 +1,4 @@
-
+[![Tests](https://github.com/halogenbarrel/Stroll/actions/workflows/tests.yml/badge.svg?branch=Devel)](https://github.com/halogenbarrel/Stroll/actions/workflows/tests.yml)
 # Stroll
 ## Details
 Stroll is a web application built on django, for both front and backend.
