@@ -54,4 +54,9 @@ jobs:
     - name: run tests
       working-directory: .
       run: |
+<<<<<<< HEAD
         ./run-tests.sh
+=======
+        python manage.py test --verbosity=2
+
+>>>>>>> 0b449a3 (fix: update test script path in GitHub Actions workflow)
